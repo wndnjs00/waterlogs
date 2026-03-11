@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'main_screen.dart';
 /*import 'ai_helper_screen.dart';*/
+import '../../../../core/util/asset_path.dart';
 
 class MainShellPage extends StatelessWidget {
   const MainShellPage({super.key, required this.child});
@@ -33,14 +34,34 @@ class MainShellPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('WaterLog'),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Icon(Icons.check_circle),
+        actions: [
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            child: Image(
+              image: AssetImage(AssetPath.badgeIcon),
+              width: 24,
+              height: 24,
+            ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Icon(Icons.notifications),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            child: Icon(Icons.notifications, size: 28),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            child: Image(
+              image: AssetImage(AssetPath.logoutIcon),
+              width: 24,
+              height: 24,
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            child: Image(
+              image: AssetImage(AssetPath.signoutIcon),
+              width: 20,
+              height: 20,
+            ),
           ),
         ],
       ),
