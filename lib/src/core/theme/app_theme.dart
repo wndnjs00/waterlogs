@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'app_colors.dart';
 
 ThemeData buildAppTheme() {
-  const mainBlue = Color(0xFF5AA0FF);
 
   final base = ThemeData(
     colorScheme: ColorScheme.fromSeed(
-      seedColor: mainBlue,
+      seedColor: AppColors.mainBlue,
       brightness: Brightness.light,
     ),
     useMaterial3: true,
@@ -13,16 +13,16 @@ ThemeData buildAppTheme() {
 
   return base.copyWith(
     appBarTheme: base.appBarTheme.copyWith(
-      backgroundColor: mainBlue,
+      backgroundColor: AppColors.mainBlue,
       foregroundColor: Colors.white,
       elevation: 0,
     ),
     navigationBarTheme: base.navigationBarTheme.copyWith(
-      indicatorColor: mainBlue.withOpacity(0.12),
+      indicatorColor: AppColors.mainBlue.withOpacity(0.12),
       iconTheme: WidgetStateProperty.resolveWith(
         (states) {
           if (states.contains(WidgetState.selected)) {
-            return const IconThemeData(color: mainBlue);
+            return const IconThemeData(color: AppColors.mainBlue);
           }
           return const IconThemeData(color: Colors.grey);
         },
@@ -30,9 +30,7 @@ ThemeData buildAppTheme() {
       labelTextStyle: WidgetStateProperty.resolveWith(
         (states) {
           return TextStyle(
-            color: states.contains(WidgetState.selected)
-                ? mainBlue
-                : Colors.grey,
+            color: states.contains(WidgetState.selected) ? AppColors.mainBlue : Colors.grey,
           );
         },
       ),
