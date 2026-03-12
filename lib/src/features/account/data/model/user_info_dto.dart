@@ -11,6 +11,12 @@ class UserInfoDto with _$UserInfoDto {
     String? email,
     required String loginProvider,
     String? createdAt,
+    String? lastDrinkDate,
+    String? lastGoalAchieveDate,
+    int? streakDays,
+    int? dailyGoal,
+    int? totalDays,
+    int? chatLimit,
   }) = _UserInfoDto;
 
   factory UserInfoDto.fromJson(Map<String, dynamic> json) =>

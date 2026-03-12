@@ -26,6 +26,12 @@ mixin _$UserInfoDto {
   String? get email => throw _privateConstructorUsedError;
   String get loginProvider => throw _privateConstructorUsedError;
   String? get createdAt => throw _privateConstructorUsedError;
+  String? get lastDrinkDate => throw _privateConstructorUsedError;
+  String? get lastGoalAchieveDate => throw _privateConstructorUsedError;
+  int? get streakDays => throw _privateConstructorUsedError;
+  int? get dailyGoal => throw _privateConstructorUsedError;
+  int? get totalDays => throw _privateConstructorUsedError;
+  int? get chatLimit => throw _privateConstructorUsedError;
 
   /// Serializes this UserInfoDto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -50,6 +56,12 @@ abstract class $UserInfoDtoCopyWith<$Res> {
     String? email,
     String loginProvider,
     String? createdAt,
+    String? lastDrinkDate,
+    String? lastGoalAchieveDate,
+    int? streakDays,
+    int? dailyGoal,
+    int? totalDays,
+    int? chatLimit,
   });
 }
 
@@ -73,6 +85,12 @@ class _$UserInfoDtoCopyWithImpl<$Res, $Val extends UserInfoDto>
     Object? email = freezed,
     Object? loginProvider = null,
     Object? createdAt = freezed,
+    Object? lastDrinkDate = freezed,
+    Object? lastGoalAchieveDate = freezed,
+    Object? streakDays = freezed,
+    Object? dailyGoal = freezed,
+    Object? totalDays = freezed,
+    Object? chatLimit = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -96,6 +114,30 @@ class _$UserInfoDtoCopyWithImpl<$Res, $Val extends UserInfoDto>
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
                       as String?,
+            lastDrinkDate: freezed == lastDrinkDate
+                ? _value.lastDrinkDate
+                : lastDrinkDate // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            lastGoalAchieveDate: freezed == lastGoalAchieveDate
+                ? _value.lastGoalAchieveDate
+                : lastGoalAchieveDate // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            streakDays: freezed == streakDays
+                ? _value.streakDays
+                : streakDays // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            dailyGoal: freezed == dailyGoal
+                ? _value.dailyGoal
+                : dailyGoal // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            totalDays: freezed == totalDays
+                ? _value.totalDays
+                : totalDays // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            chatLimit: freezed == chatLimit
+                ? _value.chatLimit
+                : chatLimit // ignore: cast_nullable_to_non_nullable
+                      as int?,
           )
           as $Val,
     );
@@ -117,6 +159,12 @@ abstract class _$$UserInfoDtoImplCopyWith<$Res>
     String? email,
     String loginProvider,
     String? createdAt,
+    String? lastDrinkDate,
+    String? lastGoalAchieveDate,
+    int? streakDays,
+    int? dailyGoal,
+    int? totalDays,
+    int? chatLimit,
   });
 }
 
@@ -139,6 +187,12 @@ class __$$UserInfoDtoImplCopyWithImpl<$Res>
     Object? email = freezed,
     Object? loginProvider = null,
     Object? createdAt = freezed,
+    Object? lastDrinkDate = freezed,
+    Object? lastGoalAchieveDate = freezed,
+    Object? streakDays = freezed,
+    Object? dailyGoal = freezed,
+    Object? totalDays = freezed,
+    Object? chatLimit = freezed,
   }) {
     return _then(
       _$UserInfoDtoImpl(
@@ -162,6 +216,30 @@ class __$$UserInfoDtoImplCopyWithImpl<$Res>
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
                   as String?,
+        lastDrinkDate: freezed == lastDrinkDate
+            ? _value.lastDrinkDate
+            : lastDrinkDate // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        lastGoalAchieveDate: freezed == lastGoalAchieveDate
+            ? _value.lastGoalAchieveDate
+            : lastGoalAchieveDate // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        streakDays: freezed == streakDays
+            ? _value.streakDays
+            : streakDays // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        dailyGoal: freezed == dailyGoal
+            ? _value.dailyGoal
+            : dailyGoal // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        totalDays: freezed == totalDays
+            ? _value.totalDays
+            : totalDays // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        chatLimit: freezed == chatLimit
+            ? _value.chatLimit
+            : chatLimit // ignore: cast_nullable_to_non_nullable
+                  as int?,
       ),
     );
   }
@@ -176,6 +254,12 @@ class _$UserInfoDtoImpl implements _UserInfoDto {
     this.email,
     required this.loginProvider,
     this.createdAt,
+    this.lastDrinkDate,
+    this.lastGoalAchieveDate,
+    this.streakDays,
+    this.dailyGoal,
+    this.totalDays,
+    this.chatLimit,
   });
 
   factory _$UserInfoDtoImpl.fromJson(Map<String, dynamic> json) =>
@@ -191,10 +275,22 @@ class _$UserInfoDtoImpl implements _UserInfoDto {
   final String loginProvider;
   @override
   final String? createdAt;
+  @override
+  final String? lastDrinkDate;
+  @override
+  final String? lastGoalAchieveDate;
+  @override
+  final int? streakDays;
+  @override
+  final int? dailyGoal;
+  @override
+  final int? totalDays;
+  @override
+  final int? chatLimit;
 
   @override
   String toString() {
-    return 'UserInfoDto(uid: $uid, name: $name, email: $email, loginProvider: $loginProvider, createdAt: $createdAt)';
+    return 'UserInfoDto(uid: $uid, name: $name, email: $email, loginProvider: $loginProvider, createdAt: $createdAt, lastDrinkDate: $lastDrinkDate, lastGoalAchieveDate: $lastGoalAchieveDate, streakDays: $streakDays, dailyGoal: $dailyGoal, totalDays: $totalDays, chatLimit: $chatLimit)';
   }
 
   @override
@@ -208,13 +304,37 @@ class _$UserInfoDtoImpl implements _UserInfoDto {
             (identical(other.loginProvider, loginProvider) ||
                 other.loginProvider == loginProvider) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.lastDrinkDate, lastDrinkDate) ||
+                other.lastDrinkDate == lastDrinkDate) &&
+            (identical(other.lastGoalAchieveDate, lastGoalAchieveDate) ||
+                other.lastGoalAchieveDate == lastGoalAchieveDate) &&
+            (identical(other.streakDays, streakDays) ||
+                other.streakDays == streakDays) &&
+            (identical(other.dailyGoal, dailyGoal) ||
+                other.dailyGoal == dailyGoal) &&
+            (identical(other.totalDays, totalDays) ||
+                other.totalDays == totalDays) &&
+            (identical(other.chatLimit, chatLimit) ||
+                other.chatLimit == chatLimit));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, uid, name, email, loginProvider, createdAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    uid,
+    name,
+    email,
+    loginProvider,
+    createdAt,
+    lastDrinkDate,
+    lastGoalAchieveDate,
+    streakDays,
+    dailyGoal,
+    totalDays,
+    chatLimit,
+  );
 
   /// Create a copy of UserInfoDto
   /// with the given fields replaced by the non-null parameter values.
@@ -237,6 +357,12 @@ abstract class _UserInfoDto implements UserInfoDto {
     final String? email,
     required final String loginProvider,
     final String? createdAt,
+    final String? lastDrinkDate,
+    final String? lastGoalAchieveDate,
+    final int? streakDays,
+    final int? dailyGoal,
+    final int? totalDays,
+    final int? chatLimit,
   }) = _$UserInfoDtoImpl;
 
   factory _UserInfoDto.fromJson(Map<String, dynamic> json) =
@@ -252,6 +378,18 @@ abstract class _UserInfoDto implements UserInfoDto {
   String get loginProvider;
   @override
   String? get createdAt;
+  @override
+  String? get lastDrinkDate;
+  @override
+  String? get lastGoalAchieveDate;
+  @override
+  int? get streakDays;
+  @override
+  int? get dailyGoal;
+  @override
+  int? get totalDays;
+  @override
+  int? get chatLimit;
 
   /// Create a copy of UserInfoDto
   /// with the given fields replaced by the non-null parameter values.

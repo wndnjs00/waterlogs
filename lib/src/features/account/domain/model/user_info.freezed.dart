@@ -25,7 +25,14 @@ mixin _$UserInfo {
   String get name => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
   LoginProvider get loginProvider => throw _privateConstructorUsedError;
-  String? get createdAt => throw _privateConstructorUsedError;
+  String? get createdAt => throw _privateConstructorUsedError; // 회원가입 날짜
+  String? get lastDrinkDate =>
+      throw _privateConstructorUsedError; // 마지막으로 물마신 날짜
+  String? get lastGoalAchieveDate => throw _privateConstructorUsedError;
+  int? get streakDays => throw _privateConstructorUsedError;
+  int? get dailyGoal => throw _privateConstructorUsedError;
+  int? get totalDays => throw _privateConstructorUsedError;
+  int? get chatLimit => throw _privateConstructorUsedError;
 
   /// Serializes this UserInfo to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,6 +55,12 @@ abstract class $UserInfoCopyWith<$Res> {
     String? email,
     LoginProvider loginProvider,
     String? createdAt,
+    String? lastDrinkDate,
+    String? lastGoalAchieveDate,
+    int? streakDays,
+    int? dailyGoal,
+    int? totalDays,
+    int? chatLimit,
   });
 }
 
@@ -71,6 +84,12 @@ class _$UserInfoCopyWithImpl<$Res, $Val extends UserInfo>
     Object? email = freezed,
     Object? loginProvider = null,
     Object? createdAt = freezed,
+    Object? lastDrinkDate = freezed,
+    Object? lastGoalAchieveDate = freezed,
+    Object? streakDays = freezed,
+    Object? dailyGoal = freezed,
+    Object? totalDays = freezed,
+    Object? chatLimit = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -94,6 +113,30 @@ class _$UserInfoCopyWithImpl<$Res, $Val extends UserInfo>
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
                       as String?,
+            lastDrinkDate: freezed == lastDrinkDate
+                ? _value.lastDrinkDate
+                : lastDrinkDate // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            lastGoalAchieveDate: freezed == lastGoalAchieveDate
+                ? _value.lastGoalAchieveDate
+                : lastGoalAchieveDate // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            streakDays: freezed == streakDays
+                ? _value.streakDays
+                : streakDays // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            dailyGoal: freezed == dailyGoal
+                ? _value.dailyGoal
+                : dailyGoal // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            totalDays: freezed == totalDays
+                ? _value.totalDays
+                : totalDays // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            chatLimit: freezed == chatLimit
+                ? _value.chatLimit
+                : chatLimit // ignore: cast_nullable_to_non_nullable
+                      as int?,
           )
           as $Val,
     );
@@ -115,6 +158,12 @@ abstract class _$$UserInfoImplCopyWith<$Res>
     String? email,
     LoginProvider loginProvider,
     String? createdAt,
+    String? lastDrinkDate,
+    String? lastGoalAchieveDate,
+    int? streakDays,
+    int? dailyGoal,
+    int? totalDays,
+    int? chatLimit,
   });
 }
 
@@ -137,6 +186,12 @@ class __$$UserInfoImplCopyWithImpl<$Res>
     Object? email = freezed,
     Object? loginProvider = null,
     Object? createdAt = freezed,
+    Object? lastDrinkDate = freezed,
+    Object? lastGoalAchieveDate = freezed,
+    Object? streakDays = freezed,
+    Object? dailyGoal = freezed,
+    Object? totalDays = freezed,
+    Object? chatLimit = freezed,
   }) {
     return _then(
       _$UserInfoImpl(
@@ -160,6 +215,30 @@ class __$$UserInfoImplCopyWithImpl<$Res>
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
                   as String?,
+        lastDrinkDate: freezed == lastDrinkDate
+            ? _value.lastDrinkDate
+            : lastDrinkDate // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        lastGoalAchieveDate: freezed == lastGoalAchieveDate
+            ? _value.lastGoalAchieveDate
+            : lastGoalAchieveDate // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        streakDays: freezed == streakDays
+            ? _value.streakDays
+            : streakDays // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        dailyGoal: freezed == dailyGoal
+            ? _value.dailyGoal
+            : dailyGoal // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        totalDays: freezed == totalDays
+            ? _value.totalDays
+            : totalDays // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        chatLimit: freezed == chatLimit
+            ? _value.chatLimit
+            : chatLimit // ignore: cast_nullable_to_non_nullable
+                  as int?,
       ),
     );
   }
@@ -174,6 +253,12 @@ class _$UserInfoImpl implements _UserInfo {
     this.email,
     required this.loginProvider,
     this.createdAt,
+    this.lastDrinkDate,
+    this.lastGoalAchieveDate,
+    this.streakDays,
+    this.dailyGoal,
+    this.totalDays,
+    this.chatLimit,
   });
 
   factory _$UserInfoImpl.fromJson(Map<String, dynamic> json) =>
@@ -189,10 +274,24 @@ class _$UserInfoImpl implements _UserInfo {
   final LoginProvider loginProvider;
   @override
   final String? createdAt;
+  // 회원가입 날짜
+  @override
+  final String? lastDrinkDate;
+  // 마지막으로 물마신 날짜
+  @override
+  final String? lastGoalAchieveDate;
+  @override
+  final int? streakDays;
+  @override
+  final int? dailyGoal;
+  @override
+  final int? totalDays;
+  @override
+  final int? chatLimit;
 
   @override
   String toString() {
-    return 'UserInfo(uid: $uid, name: $name, email: $email, loginProvider: $loginProvider, createdAt: $createdAt)';
+    return 'UserInfo(uid: $uid, name: $name, email: $email, loginProvider: $loginProvider, createdAt: $createdAt, lastDrinkDate: $lastDrinkDate, lastGoalAchieveDate: $lastGoalAchieveDate, streakDays: $streakDays, dailyGoal: $dailyGoal, totalDays: $totalDays, chatLimit: $chatLimit)';
   }
 
   @override
@@ -206,13 +305,37 @@ class _$UserInfoImpl implements _UserInfo {
             (identical(other.loginProvider, loginProvider) ||
                 other.loginProvider == loginProvider) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.lastDrinkDate, lastDrinkDate) ||
+                other.lastDrinkDate == lastDrinkDate) &&
+            (identical(other.lastGoalAchieveDate, lastGoalAchieveDate) ||
+                other.lastGoalAchieveDate == lastGoalAchieveDate) &&
+            (identical(other.streakDays, streakDays) ||
+                other.streakDays == streakDays) &&
+            (identical(other.dailyGoal, dailyGoal) ||
+                other.dailyGoal == dailyGoal) &&
+            (identical(other.totalDays, totalDays) ||
+                other.totalDays == totalDays) &&
+            (identical(other.chatLimit, chatLimit) ||
+                other.chatLimit == chatLimit));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, uid, name, email, loginProvider, createdAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    uid,
+    name,
+    email,
+    loginProvider,
+    createdAt,
+    lastDrinkDate,
+    lastGoalAchieveDate,
+    streakDays,
+    dailyGoal,
+    totalDays,
+    chatLimit,
+  );
 
   /// Create a copy of UserInfo
   /// with the given fields replaced by the non-null parameter values.
@@ -235,6 +358,12 @@ abstract class _UserInfo implements UserInfo {
     final String? email,
     required final LoginProvider loginProvider,
     final String? createdAt,
+    final String? lastDrinkDate,
+    final String? lastGoalAchieveDate,
+    final int? streakDays,
+    final int? dailyGoal,
+    final int? totalDays,
+    final int? chatLimit,
   }) = _$UserInfoImpl;
 
   factory _UserInfo.fromJson(Map<String, dynamic> json) =
@@ -249,7 +378,19 @@ abstract class _UserInfo implements UserInfo {
   @override
   LoginProvider get loginProvider;
   @override
-  String? get createdAt;
+  String? get createdAt; // 회원가입 날짜
+  @override
+  String? get lastDrinkDate; // 마지막으로 물마신 날짜
+  @override
+  String? get lastGoalAchieveDate;
+  @override
+  int? get streakDays;
+  @override
+  int? get dailyGoal;
+  @override
+  int? get totalDays;
+  @override
+  int? get chatLimit;
 
   /// Create a copy of UserInfo
   /// with the given fields replaced by the non-null parameter values.

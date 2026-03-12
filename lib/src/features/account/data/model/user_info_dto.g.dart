@@ -13,6 +13,12 @@ _$UserInfoDtoImpl _$$UserInfoDtoImplFromJson(Map<String, dynamic> json) =>
       email: json['email'] as String?,
       loginProvider: json['loginProvider'] as String,
       createdAt: json['createdAt'] as String?,
+      lastDrinkDate: json['lastDrinkDate'] as String?,
+      lastGoalAchieveDate: json['lastGoalAchieveDate'] as String?,
+      streakDays: (json['streakDays'] as num?)?.toInt(),
+      dailyGoal: (json['dailyGoal'] as num?)?.toInt(),
+      totalDays: (json['totalDays'] as num?)?.toInt(),
+      chatLimit: (json['chatLimit'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$UserInfoDtoImplToJson(_$UserInfoDtoImpl instance) =>
@@ -22,4 +28,10 @@ Map<String, dynamic> _$$UserInfoDtoImplToJson(_$UserInfoDtoImpl instance) =>
       'email': instance.email,
       'loginProvider': instance.loginProvider,
       'createdAt': instance.createdAt,
+      'lastDrinkDate': instance.lastDrinkDate,
+      'lastGoalAchieveDate': instance.lastGoalAchieveDate,
+      'streakDays': instance.streakDays,
+      'dailyGoal': instance.dailyGoal,
+      'totalDays': instance.totalDays,
+      'chatLimit': instance.chatLimit,
     };

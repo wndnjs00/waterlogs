@@ -11,10 +11,16 @@ class UserInfoMapper {
       name: dto.name,
       email: dto.email,
       loginProvider: LoginProvider.values.firstWhere(
-            (v) => v.name == dto.loginProvider,
+        (v) => v.name == dto.loginProvider,
         orElse: () => LoginProvider.email,
       ),
       createdAt: dto.createdAt,
+      lastDrinkDate: dto.lastDrinkDate,
+      lastGoalAchieveDate: dto.lastGoalAchieveDate,
+      streakDays: dto.streakDays,
+      dailyGoal: dto.dailyGoal,
+      totalDays: dto.totalDays,
+      chatLimit: dto.chatLimit,
     );
   }
 
@@ -26,6 +32,12 @@ class UserInfoMapper {
       email: user.email,
       loginProvider: user.loginProvider.name,
       createdAt: user.createdAt,
+      lastDrinkDate: user.lastDrinkDate,
+      lastGoalAchieveDate: user.lastGoalAchieveDate,
+      streakDays: user.streakDays,
+      dailyGoal: user.dailyGoal,
+      totalDays: user.totalDays,
+      chatLimit: user.chatLimit,
     );
   }
 }

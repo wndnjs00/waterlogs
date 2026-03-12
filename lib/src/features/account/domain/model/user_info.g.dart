@@ -13,6 +13,12 @@ _$UserInfoImpl _$$UserInfoImplFromJson(Map<String, dynamic> json) =>
       email: json['email'] as String?,
       loginProvider: $enumDecode(_$LoginProviderEnumMap, json['loginProvider']),
       createdAt: json['createdAt'] as String?,
+      lastDrinkDate: json['lastDrinkDate'] as String?,
+      lastGoalAchieveDate: json['lastGoalAchieveDate'] as String?,
+      streakDays: (json['streakDays'] as num?)?.toInt(),
+      dailyGoal: (json['dailyGoal'] as num?)?.toInt(),
+      totalDays: (json['totalDays'] as num?)?.toInt(),
+      chatLimit: (json['chatLimit'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$UserInfoImplToJson(_$UserInfoImpl instance) =>
@@ -22,6 +28,12 @@ Map<String, dynamic> _$$UserInfoImplToJson(_$UserInfoImpl instance) =>
       'email': instance.email,
       'loginProvider': _$LoginProviderEnumMap[instance.loginProvider]!,
       'createdAt': instance.createdAt,
+      'lastDrinkDate': instance.lastDrinkDate,
+      'lastGoalAchieveDate': instance.lastGoalAchieveDate,
+      'streakDays': instance.streakDays,
+      'dailyGoal': instance.dailyGoal,
+      'totalDays': instance.totalDays,
+      'chatLimit': instance.chatLimit,
     };
 
 const _$LoginProviderEnumMap = {
