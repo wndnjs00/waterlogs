@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:waterlogs/src/features/account/presentation/viewmodel/provider/auth_provider.dart';
+import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
+import 'package:waterlogs/src/features/account/presentation/viewmodel/state/email_auth_state.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../presentation/viewmodel/auth_view_model.dart';
 import '../../../main/presentation/screen/main_screen.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
@@ -38,7 +40,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     final viewModel = ref.read(authViewModelProvider.notifier);
 
     ref.listen<AuthViewState>(authViewModelProvider, (previous, next) {
-      if (previous?.signInState.status != EmailAuthStatus.success &&
+      if (previous?.signInState.status != EmailAuthState.success &&
           next.signInState.status == EmailAuthStatus.success) {
         viewModel.resetSignInState();
         context.go(MainScreen.routePath);

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:waterlogs/src/features/account/presentation/viewmodel/provider/auth_provider.dart';
+import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/util/asset_path.dart';
 import '../../../main/presentation/screen/main_screen.dart';
-import '../../presentation/viewmodel/auth_view_model.dart';
 import 'sign_in_screen.dart';
 import 'sign_up_screen.dart';
 

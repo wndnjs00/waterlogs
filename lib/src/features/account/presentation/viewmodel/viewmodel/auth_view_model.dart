@@ -1,60 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
+import 'package:waterlogs/src/features/account/presentation/viewmodel/state/email_auth_state.dart';
 
-import '../../domain/model/user_info.dart';
-import '../../domain/repository/account_repository.dart';
-import '../di/account_providers.dart';
-
-enum EmailAuthStatus { idle, loading, success, error }
-
-class EmailAuthState {
-  const EmailAuthState(this.status, [this.message]);
-
-  final EmailAuthStatus status;
-  final String? message;
-
-  static const idle = EmailAuthState(EmailAuthStatus.idle);
-  static const loading = EmailAuthState(EmailAuthStatus.loading);
-  static const success = EmailAuthState(EmailAuthStatus.success);
-
-  EmailAuthState copyWith({
-    EmailAuthStatus? status,
-    String? message,
-  }) {
-    return EmailAuthState(
-      status ?? this.status,
-      message ?? this.message,
-    );
-  }
-}
-
-class AuthViewState {
-  const AuthViewState({
-    this.user,
-    this.signUpState = EmailAuthState.idle,
-    this.signInState = EmailAuthState.idle,
-  });
-
-  final UserInfo? user;
-  final EmailAuthState signUpState;
-  final EmailAuthState signInState;
-
-  AuthViewState copyWith({
-    UserInfo? user,
-    EmailAuthState? signUpState,
-    EmailAuthState? signInState,
-  }) {
-    return AuthViewState(
-      user: user ?? this.user,
-      signUpState: signUpState ?? this.signUpState,
-      signInState: signInState ?? this.signInState,
-    );
-  }
-
-  static const initial = AuthViewState();
-}
-
+import '../../../domain/model/user_info.dart';
+import '../../../domain/repository/account_repository.dart';
 
 class AuthViewModel extends StateNotifier<AuthViewState> {
   AuthViewModel(this._repository) : super(AuthViewState.initial) {
@@ -136,10 +87,3 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
     super.dispose();
   }
 }
-
-// 외부에서 사용하는 Provider
-final authViewModelProvider =
-    StateNotifierProvider<AuthViewModel, AuthViewState>((ref) {
-  final repository = ref.watch(accountRepositoryProvider);
-  return AuthViewModel(repository);
-});

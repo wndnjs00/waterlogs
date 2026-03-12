@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waterlogs/src/core/theme/app_colors.dart';
-
-import '../../presentation/viewmodel/auth_view_model.dart';
+import 'package:waterlogs/src/features/account/presentation/viewmodel/provider/auth_provider.dart';
+import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
+import 'package:waterlogs/src/features/account/presentation/viewmodel/state/email_auth_state.dart';
 
 class SignUpScreen extends ConsumerWidget {
   const SignUpScreen({super.key});
@@ -26,7 +27,7 @@ class SignUpScreen extends ConsumerWidget {
     ref.listen<AuthViewState>(
       authViewModelProvider,
       (previous, next) {
-        if (previous?.signUpState.status != EmailAuthStatus.success &&
+        if (previous?.signUpState.status != EmailAuthState.success &&
             next.signUpState.status == EmailAuthStatus.success) {
           viewModel.resetSignUpState();
           Navigator.of(context).pop(); // 가입 완료 후 이전 화면(로그인)으로

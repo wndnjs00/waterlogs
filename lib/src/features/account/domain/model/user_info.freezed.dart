@@ -29,9 +29,9 @@ mixin _$UserInfo {
   String? get lastDrinkDate =>
       throw _privateConstructorUsedError; // 마지막으로 물마신 날짜
   String? get lastGoalAchieveDate => throw _privateConstructorUsedError;
-  int? get streakDays => throw _privateConstructorUsedError;
+  int? get streakDays => throw _privateConstructorUsedError; //연속 섭취 일수
   int? get dailyGoal => throw _privateConstructorUsedError;
-  int? get totalDays => throw _privateConstructorUsedError;
+  int? get totalDays => throw _privateConstructorUsedError; //총 기록한 일수
   int? get chatLimit => throw _privateConstructorUsedError;
 
   /// Serializes this UserInfo to a JSON map.
@@ -282,10 +282,12 @@ class _$UserInfoImpl implements _UserInfo {
   final String? lastGoalAchieveDate;
   @override
   final int? streakDays;
+  //연속 섭취 일수
   @override
   final int? dailyGoal;
   @override
   final int? totalDays;
+  //총 기록한 일수
   @override
   final int? chatLimit;
 
@@ -384,11 +386,11 @@ abstract class _UserInfo implements UserInfo {
   @override
   String? get lastGoalAchieveDate;
   @override
-  int? get streakDays;
+  int? get streakDays; //연속 섭취 일수
   @override
   int? get dailyGoal;
   @override
-  int? get totalDays;
+  int? get totalDays; //총 기록한 일수
   @override
   int? get chatLimit;
 
