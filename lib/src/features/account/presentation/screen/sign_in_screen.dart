@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:waterlogs/src/core/router/app_routes.dart';
+import 'package:waterlogs/src/core/validator/auth_validator.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/provider/auth_provider.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/email_auth_state.dart';
@@ -18,11 +19,6 @@ class SignInScreen extends ConsumerStatefulWidget {
 class _SignInScreenState extends ConsumerState<SignInScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  static final _emailRegex = RegExp(r"^[\w\.-]+@[\w\.-]+\.\w+$");
-  static final _passwordRegex = RegExp(
-    r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#\$%^&*()_+=-]).{8,}$',
-  );
 
   @override
   void dispose() {
@@ -46,8 +42,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     final email = _emailController.text.trim();
     final password = _passwordController.text;
-    final isValidEmail = _emailRegex.hasMatch(email);
-    final isValidPassword = _passwordRegex.hasMatch(password);
+    final isValidEmail = AuthValidator.isValidEmail(email);
+    final isValidPassword = AuthValidator.isValidPassword(password);
     final isFormValid = isValidEmail && isValidPassword && email.isNotEmpty && password.isNotEmpty;
     final isLoading = state.signInState.status == EmailAuthStatus.loading;
 
