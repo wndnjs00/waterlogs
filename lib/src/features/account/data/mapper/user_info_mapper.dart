@@ -1,19 +1,14 @@
 import '../../domain/model/user_info.dart';
 import '../model/user_info_dto.dart';
 
-
 class UserInfoMapper {
-
   // DTO -> Domain
   static UserInfo toDomain(UserInfoDto dto) {
     return UserInfo(
       uid: dto.uid,
       name: dto.name,
       email: dto.email,
-      loginProvider: LoginProvider.values.firstWhere(
-        (v) => v.name == dto.loginProvider,
-        orElse: () => LoginProvider.email,
-      ),
+      loginProvider: dto.loginProvider.toLoginProvider(),
       createdAt: dto.createdAt,
       lastDrinkDate: dto.lastDrinkDate,
       lastGoalAchieveDate: dto.lastGoalAchieveDate,
@@ -38,6 +33,15 @@ class UserInfoMapper {
       dailyGoal: user.dailyGoal,
       totalDays: user.totalDays,
       chatLimit: user.chatLimit,
+    );
+  }
+}
+
+extension LoginProviderParser on String {
+  LoginProvider toLoginProvider() {
+    return LoginProvider.values.firstWhere(
+      (e) => e.name == this,
+      orElse: () => LoginProvider.email,
     );
   }
 }
