@@ -6,9 +6,6 @@ import '../viewmodel/temp_view_model.dart';
 class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
 
-  static const routePath = '/main';
-  static const routeName = 'main';
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 

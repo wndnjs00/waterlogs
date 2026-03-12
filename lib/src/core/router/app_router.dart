@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:waterlogs/src/core/router/app_routes.dart';
 
 import '../../features/main/presentation/screen/main_shell_page.dart';
 import '../../features/main/presentation/screen/main_screen.dart';
@@ -11,21 +11,21 @@ import '../../features/account/presentation/screen/sign_up_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: LoginScreen.routePath,
+    initialLocation: AppRoutes.login,
     routes: [
       GoRoute(
-        path: LoginScreen.routePath,
-        name: LoginScreen.routeName,
+        path: AppRoutes.login,
+        name: AppRoutes.loginName,
         builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
-        path: SignInScreen.routePath,
-        name: SignInScreen.routeName,
+        path: AppRoutes.signIn,
+        name: AppRoutes.signInName,
         builder: (context, state) => const SignInScreen(),
       ),
       GoRoute(
-        path: SignUpScreen.routePath,
-        name: SignUpScreen.routeName,
+        path: AppRoutes.signUp,
+        name: AppRoutes.signUpName,
         builder: (context, state) => const SignUpScreen(),
       ),
 
@@ -33,15 +33,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state, child) => MainShellPage(child: child),
         routes: [
           GoRoute(
-            path: MainScreen.routePath,
-            name: MainScreen.routeName,
+            path: AppRoutes.main,
+            name: AppRoutes.mainName,
             pageBuilder: (context, state) => const NoTransitionPage(
               child: MainScreen(),
             ),
           ),
           GoRoute(
-            path: AiHelperScreen.routePath,
-            name: AiHelperScreen.routeName,
+            path: AppRoutes.aiHelper,
+            name: AppRoutes.aiName,
             pageBuilder: (context, state) => const NoTransitionPage(
               child: AiHelperScreen(),
             ),

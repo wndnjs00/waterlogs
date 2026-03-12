@@ -8,9 +8,6 @@ import 'package:waterlogs/src/features/account/presentation/viewmodel/state/emai
 class SignUpScreen extends ConsumerWidget {
   const SignUpScreen({super.key});
 
-  static const routePath = '/login/sign-up';
-  static const routeName = 'sign-up';
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(authViewModelProvider);

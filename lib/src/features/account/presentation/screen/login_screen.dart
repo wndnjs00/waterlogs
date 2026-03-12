@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:waterlogs/src/core/router/app_routes.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/provider/auth_provider.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/util/asset_path.dart';
-import '../../../main/presentation/screen/main_screen.dart';
-import 'sign_in_screen.dart';
-import 'sign_up_screen.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
-
-  static const routePath = '/login';
-  static const routeName = 'login';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,7 +18,7 @@ class LoginScreen extends ConsumerWidget {
     // 자동 로그인: 이미 로그인된 유저가 있으면 바로 메인으로 이동
     ref.listen<AuthViewState>(authViewModelProvider, (previous, next) {
       if (previous?.user == null && next.user != null) {
-        context.go(MainScreen.routePath);
+        context.go(AppRoutes.main);
       }
     });
 
@@ -57,7 +52,7 @@ class LoginScreen extends ConsumerWidget {
 
               _EmailSignUpButton(
                 onTap: () {
-                  context.push(SignUpScreen.routePath);
+                  context.push(AppRoutes.signUp);
                 },
               ),
 
@@ -72,7 +67,7 @@ class LoginScreen extends ConsumerWidget {
 
               GestureDetector(
                 onTap: () {
-                  context.push(SignInScreen.routePath);
+                  context.push(AppRoutes.signIn);
                 },
                 child: const Text(
                   '기존 계정으로 로그인하기',
