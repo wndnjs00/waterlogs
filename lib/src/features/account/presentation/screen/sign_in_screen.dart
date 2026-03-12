@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:waterlogs/src/core/router/app_routes.dart';
 import 'package:waterlogs/src/core/validator/auth_validator.dart';
-import 'package:waterlogs/src/features/account/presentation/viewmodel/provider/auth_provider.dart';
+import 'package:waterlogs/src/features/account/presentation/viewmodel/auth_provider.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/email_auth_state.dart';
 

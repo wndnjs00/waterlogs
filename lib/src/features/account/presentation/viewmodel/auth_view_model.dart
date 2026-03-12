@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/email_auth_state.dart';
 
-import '../../../domain/model/user_info.dart';
-import '../../../domain/repository/account_repository.dart';
+import '../../domain/model/user_info.dart';
+import '../../domain/repository/account_repository.dart';
 
 class AuthViewModel extends StateNotifier<AuthViewState> {
   AuthViewModel(this._repository) : super(AuthViewState.initial) {

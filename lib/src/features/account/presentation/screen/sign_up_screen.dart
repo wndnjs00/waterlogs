@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waterlogs/src/core/theme/app_colors.dart';
 import 'package:waterlogs/src/core/validator/auth_validator.dart';
-import 'package:waterlogs/src/features/account/presentation/viewmodel/provider/auth_provider.dart';
+import 'package:waterlogs/src/features/account/presentation/viewmodel/auth_provider.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/email_auth_state.dart';
 
