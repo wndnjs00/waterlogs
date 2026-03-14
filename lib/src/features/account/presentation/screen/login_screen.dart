@@ -11,6 +11,22 @@ import '../../../../core/util/asset_path.dart';
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
+  static Future<void> _handleSocialLogin(
+    BuildContext context,
+    WidgetRef ref,
+    Future<void> Function() action,
+  ) async {
+    try {
+      await action();
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e is StateError ? e.message : e.toString())),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authViewModelProvider);
@@ -43,11 +59,29 @@ class LoginScreen extends ConsumerWidget {
                 style: TextStyle(color: Colors.white70, fontSize: 14),
               ),
               const SizedBox(height: 48),
-              _KakaoLoginButton(onTap: () {}),
+              _KakaoLoginButton(
+                onTap: () => _handleSocialLogin(
+                  context,
+                  ref,
+                  () => ref.read(authViewModelProvider.notifier).signInWithKakao(),
+                ),
+              ),
               const SizedBox(height: 8),
-              _NaverLoginButton(onTap: () {}),
+              _NaverLoginButton(
+                onTap: () => _handleSocialLogin(
+                  context,
+                  ref,
+                  () => ref.read(authViewModelProvider.notifier).signInWithNaver(),
+                ),
+              ),
               const SizedBox(height: 8),
-              _GoogleLoginButton(onTap: () {}),
+              _GoogleLoginButton(
+                onTap: () => _handleSocialLogin(
+                  context,
+                  ref,
+                  () => ref.read(authViewModelProvider.notifier).signInWithGoogle(),
+                ),
+              ),
               const SizedBox(height: 8),
 
               _EmailSignUpButton(

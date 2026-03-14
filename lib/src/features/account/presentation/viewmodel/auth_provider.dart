@@ -4,7 +4,15 @@ import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth
 import 'package:waterlogs/src/features/account/presentation/viewmodel/auth_view_model.dart';
 
 final authViewModelProvider =
-StateNotifierProvider<AuthViewModel, AuthViewState>((ref) {
-  final repository = ref.watch(accountRepositoryProvider);
-  return AuthViewModel(repository);
-});
+    StateNotifierProvider<AuthViewModel, AuthViewState>((ref) {
+      final repository = ref.watch(accountRepositoryProvider);
+      final kakaoAuth = ref.watch(kakaoAuthDataSourceProvider);
+      final naverAuth = ref.watch(naverAuthDataSourceProvider);
+      final googleAuth = ref.watch(googleAuthDataSourceProvider);
+      return AuthViewModel(
+        repository,
+        kakaoAuth: kakaoAuth,
+        naverAuth: naverAuth,
+        googleAuth: googleAuth,
+      );
+    });
