@@ -7,6 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart' hide UserInfo;
 import '../../domain/model/user_info.dart';
 import '../../domain/repository/account_repository.dart';
 import '../../domain/repository/time_provider.dart';
+import '../datasource/google_auth_datasource.dart';
+import '../datasource/kakao_auth_datasource.dart';
+import '../datasource/naver_auth_datasource.dart';
 import '../mapper/user_info_mapper.dart';
 import '../model/user_info_dto.dart';
 
@@ -16,12 +19,18 @@ class AccountRepositoryImpl implements AccountRepository {
   final FirebaseFirestore _firestore;
   final FirebaseFunctions _functions;
   final TimeProvider _timeProvider;
+  final KakaoAuthDataSource _kakaoAuth;
+  final NaverAuthDataSource _naverAuth;
+  final GoogleAuthDataSource _googleAuth;
 
   AccountRepositoryImpl(
     this._auth,
     this._firestore,
     this._functions,
     this._timeProvider,
+    this._kakaoAuth,
+    this._naverAuth,
+    this._googleAuth,
   );
 
   final _controller = StreamController<UserInfo?>.broadcast();
@@ -52,7 +61,20 @@ class AccountRepositoryImpl implements AccountRepository {
 
   @override
   Future<void> logout(LoginProvider? loginProvider) async {
-    // TODO: Kotlin 처럼 로그인 공급자별 추가 처리(Google/Kakao/Naver 등)는 추후 플랫폼별 SDK 연동 시 확장
+    switch (loginProvider) {
+      case LoginProvider.google:
+        await _googleAuth.logout();
+        break;
+      case LoginProvider.kakao:
+        await _kakaoAuth.logout();
+        break;
+      case LoginProvider.naver:
+        await _naverAuth.logout();
+        break;
+      case LoginProvider.email:
+      case null:
+        break;
+    }
     await _auth.signOut();
     _current = null;
     _controller.add(null);

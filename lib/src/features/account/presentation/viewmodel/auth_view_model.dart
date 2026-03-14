@@ -86,20 +86,6 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
   }
 
   Future<void> logout(LoginProvider? provider) async {
-    switch (provider) {
-      case LoginProvider.kakao:
-        await _kakaoAuth.logout();
-        break;
-      case LoginProvider.naver:
-        await _naverAuth.logout();
-        break;
-      case LoginProvider.google:
-        await _googleAuth.logout();
-        break;
-      case LoginProvider.email:
-      case null:
-        break;
-    }
     await _repository.logout(provider);
   }
 

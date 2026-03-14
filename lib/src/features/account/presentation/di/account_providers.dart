@@ -13,16 +13,28 @@ import '../../domain/repository/account_repository.dart';
 import '../../domain/repository/time_provider.dart';
 
 // Firebase
-final firebaseAuthProvider = Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
-final firebaseFirestoreProvider = Provider<FirebaseFirestore>((ref) => FirebaseFirestore.instance);
-final firebaseFunctionsProvider = Provider<FirebaseFunctions>((ref) => FirebaseFunctions.instance);
+final firebaseAuthProvider = Provider<FirebaseAuth>(
+  (ref) => FirebaseAuth.instance,
+);
+final firebaseFirestoreProvider = Provider<FirebaseFirestore>(
+  (ref) => FirebaseFirestore.instance,
+);
+final firebaseFunctionsProvider = Provider<FirebaseFunctions>(
+  (ref) => FirebaseFunctions.instance,
+);
 
 // TimeProvider
-final timeProviderProvider = Provider<TimeProvider>((ref) => const TimeProviderImpl());
+final timeProviderProvider = Provider<TimeProvider>(
+  (ref) => const TimeProviderImpl(),
+);
 
 // Social login data sources
-final kakaoAuthDataSourceProvider = Provider<KakaoAuthDataSource>((ref) => KakaoAuthDataSource());
-final naverAuthDataSourceProvider = Provider<NaverAuthDataSource>((ref) => NaverAuthDataSource());
+final kakaoAuthDataSourceProvider = Provider<KakaoAuthDataSource>(
+  (ref) => KakaoAuthDataSource(),
+);
+final naverAuthDataSourceProvider = Provider<NaverAuthDataSource>(
+  (ref) => NaverAuthDataSource(),
+);
 
 final googleAuthDataSourceProvider = Provider<GoogleAuthDataSource>((ref) {
   return GoogleAuthDataSource(serverClientId: AppConfig.googleServerClientId);
@@ -34,5 +46,16 @@ final accountRepositoryProvider = Provider<AccountRepository>((ref) {
   final firestore = ref.watch(firebaseFirestoreProvider);
   final functions = ref.watch(firebaseFunctionsProvider);
   final timeProvider = ref.watch(timeProviderProvider);
-  return AccountRepositoryImpl(auth, firestore, functions, timeProvider);
+  final kakaoAuth = ref.watch(kakaoAuthDataSourceProvider);
+  final naverAuth = ref.watch(naverAuthDataSourceProvider);
+  final googleAuth = ref.watch(googleAuthDataSourceProvider);
+  return AccountRepositoryImpl(
+    auth,
+    firestore,
+    functions,
+    timeProvider,
+    kakaoAuth,
+    naverAuth,
+    googleAuth,
+  );
 });
