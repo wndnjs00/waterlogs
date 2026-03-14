@@ -60,8 +60,8 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
     } catch (e) {
       state = state.copyWith(
         signUpState: EmailAuthState(
-          EmailAuthStatus.error,
-          e.toString(),
+          status: EmailAuthStatus.error,
+          message: e.toString(),
         ),
       );
     }
@@ -78,8 +78,8 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
     } catch (e) {
       state = state.copyWith(
         signInState: EmailAuthState(
-          EmailAuthStatus.error,
-          e.toString(),
+          status: EmailAuthStatus.error,
+          message: e.toString()
         ),
       );
     }

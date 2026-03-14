@@ -42,6 +42,8 @@ abstract class $AuthViewStateCopyWith<$Res> {
   });
 
   $UserInfoCopyWith<$Res>? get user;
+  $EmailAuthStateCopyWith<$Res> get signUpState;
+  $EmailAuthStateCopyWith<$Res> get signInState;
 }
 
 /// @nodoc
@@ -95,6 +97,26 @@ class _$AuthViewStateCopyWithImpl<$Res, $Val extends AuthViewState>
       return _then(_value.copyWith(user: value) as $Val);
     });
   }
+
+  /// Create a copy of AuthViewState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $EmailAuthStateCopyWith<$Res> get signUpState {
+    return $EmailAuthStateCopyWith<$Res>(_value.signUpState, (value) {
+      return _then(_value.copyWith(signUpState: value) as $Val);
+    });
+  }
+
+  /// Create a copy of AuthViewState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $EmailAuthStateCopyWith<$Res> get signInState {
+    return $EmailAuthStateCopyWith<$Res>(_value.signInState, (value) {
+      return _then(_value.copyWith(signInState: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -114,6 +136,10 @@ abstract class _$$AuthViewStateImplCopyWith<$Res>
 
   @override
   $UserInfoCopyWith<$Res>? get user;
+  @override
+  $EmailAuthStateCopyWith<$Res> get signUpState;
+  @override
+  $EmailAuthStateCopyWith<$Res> get signInState;
 }
 
 /// @nodoc
