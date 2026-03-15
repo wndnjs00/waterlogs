@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:waterlogs/src/features/account/domain/usecase/account_usecase.dart';
+import 'package:waterlogs/src/features/account/domain/usecase/auth_usecase.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/email_auth_state.dart';
 
@@ -13,22 +15,28 @@ import '../../domain/repository/account_repository.dart';
 
 class AuthViewModel extends StateNotifier<AuthViewState> {
 
-  final AccountRepository _repository;
+  final AuthUseCase _authUseCase;
+  final AccountUseCase _accountUseCase;
+
   StreamSubscription<UserInfo?>? _userSub;
 
-  AuthViewModel(this._repository): super(AuthViewState.initial) {
+  AuthViewModel(
+      this._authUseCase,
+      this._accountUseCase,
+      ): super(AuthViewState.initial) {
     _init();
   }
 
   void _init() {
+
     // 자동 로그인: Firebase 현재 유저 + Firestore 정보 불러오기
-    _repository.loadUserFromFireStore().then((user) {
+    _accountUseCase.loadUser().then((user) {
       if (user != null) {
         state = state.copyWith(user: user);
       }
     });
 
-    _userSub = _repository.getAccountInfo().listen((user) {
+    _userSub = _accountUseCase.getAccountInfo().listen((user) {
       state = state.copyWith(user: user);
     });
   }
@@ -39,12 +47,14 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
     required String name,
   }) async {
     state = state.copyWith(signUpState: EmailAuthState.loading);
+
     try {
-      await _repository.signUpWithEmail(
+      await _authUseCase.signUpWithEmail(
         email: email,
         password: password,
         name: name,
       );
+
       state = state.copyWith(signUpState: EmailAuthState.success);
     } catch (e) {
       state = state.copyWith(
@@ -61,9 +71,12 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
     required String password,
   }) async {
     state = state.copyWith(signInState: EmailAuthState.loading);
+
     try {
-      await _repository.signInWithEmail(email: email, password: password);
+      await _authUseCase.signInWithEmail(email: email, password: password);
+
       state = state.copyWith(signInState: EmailAuthState.success);
+
     } catch (e) {
       state = state.copyWith(
         signInState: EmailAuthState(
@@ -75,21 +88,21 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
   }
 
   Future<void> logout(LoginProvider? provider) async {
-    await _repository.logout(provider);
+    await _accountUseCase.logout(provider);
   }
 
   Future<void> signInWithKakao() async {
-    await _repository.signInWithKakao();
+    await _authUseCase.signInWithKakao();
   }
 
   // 네이버 로그인
   Future<void> signInWithNaver() async {
-    await _repository.signInWithNaver();
+    await _authUseCase.signInWithNaver();
   }
 
   // 구글 로그인
   Future<void> signInWithGoogle() async {
-    await _repository.signInWithGoogle();
+    await _authUseCase.signInWithGoogle();
   }
 
   void resetSignUpState() {
@@ -104,7 +117,7 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
       LoginProvider provider, {
         String? emailReauthPassword,
       }) async {
-    await _repository.deleteAccount(
+    await _accountUseCase.deleteAccount(
       provider,
       emailReauthPassword: emailReauthPassword,
     );

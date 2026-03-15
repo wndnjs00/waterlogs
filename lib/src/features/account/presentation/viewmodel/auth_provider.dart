@@ -5,8 +5,8 @@ import 'package:waterlogs/src/features/account/presentation/viewmodel/auth_view_
 
 final authViewModelProvider =
     StateNotifierProvider<AuthViewModel, AuthViewState>((ref) {
-      final repository = ref.watch(accountRepositoryProvider);
-      return AuthViewModel(
-        repository,
-      );
+      final authUseCase = ref.watch(authUseCaseProvider);
+      final accountUseCase = ref.watch(accountUseCaseProvider);
+
+      return AuthViewModel(authUseCase, accountUseCase);
     });
