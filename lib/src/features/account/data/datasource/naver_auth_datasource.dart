@@ -22,4 +22,9 @@ class NaverAuthDataSource {
   Future<void> logout() async {
     await NaverLoginSDK.logout();
   }
+
+  // 네이버 연동 해제 (회원탈퇴 시 호출)
+  Future<void> signout() async {
+    await NaverLoginSDK.logout(isForced: true);
+  }
 }

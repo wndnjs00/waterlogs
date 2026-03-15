@@ -4,7 +4,7 @@ import 'package:waterlogs/src/core/config/app_config.dart';
 class GoogleAuthDataSource {
 
   final GoogleSignIn _googleSignIn;
-  var serverClientId;
+  final String serverClientId;
 
   GoogleAuthDataSource({required this.serverClientId})
     : _googleSignIn = GoogleSignIn(

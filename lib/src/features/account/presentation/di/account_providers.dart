@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waterlogs/src/core/config/app_config.dart';
 
+import '../../data/datasource/account_remote_datasource.dart';
 import '../../data/datasource/google_auth_datasource.dart';
 import '../../data/datasource/kakao_auth_datasource.dart';
 import '../../data/datasource/naver_auth_datasource.dart';
@@ -40,12 +41,19 @@ final googleAuthDataSourceProvider = Provider<GoogleAuthDataSource>((ref) {
   return GoogleAuthDataSource(serverClientId: AppConfig.googleServerClientId);
 });
 
+final accountRemoteDataSourceProvider = Provider<AccountRemoteDataSource>((ref) {
+  final auth = ref.watch(firebaseAuthProvider);
+  final firestore = ref.watch(firebaseFirestoreProvider);
+  return AccountRemoteDataSource(auth, firestore);
+});
+
 // AccountRepository
 final accountRepositoryProvider = Provider<AccountRepository>((ref) {
   final auth = ref.watch(firebaseAuthProvider);
   final firestore = ref.watch(firebaseFirestoreProvider);
   final functions = ref.watch(firebaseFunctionsProvider);
   final timeProvider = ref.watch(timeProviderProvider);
+  final accountRemote = ref.watch(accountRemoteDataSourceProvider);
   final kakaoAuth = ref.watch(kakaoAuthDataSourceProvider);
   final naverAuth = ref.watch(naverAuthDataSourceProvider);
   final googleAuth = ref.watch(googleAuthDataSourceProvider);
@@ -54,6 +62,7 @@ final accountRepositoryProvider = Provider<AccountRepository>((ref) {
     firestore,
     functions,
     timeProvider,
+    accountRemote,
     kakaoAuth,
     naverAuth,
     googleAuth,

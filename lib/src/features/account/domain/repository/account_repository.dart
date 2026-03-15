@@ -1,7 +1,6 @@
 import '../model/user_info.dart';
 
 abstract class AccountRepository {
-
   // 계정 정보 가져오기
   Stream<UserInfo?> getAccountInfo();
 
@@ -21,15 +20,18 @@ abstract class AccountRepository {
     required String password,
   });
 
-  /// 카카오 액세스 토큰으로 Firebase 커스텀 토큰 로그인 후 UserInfo 저장
-  Future<UserInfo> signInWithKakao(String accessToken);
+  Future<UserInfo> signInWithKakao();
 
-  /// 네이버 액세스 토큰으로 Firebase 커스텀 토큰 로그인 후 UserInfo 저장
-  Future<UserInfo> signInWithNaver(String accessToken);
+  Future<UserInfo> signInWithNaver();
 
-  /// 구글 ID 토큰으로 Firebase 로그인 후 UserInfo 저장
-  Future<UserInfo> signInWithGoogle(String idToken);
+  Future<UserInfo> signInWithGoogle();
 
   // 자동 로그인용: 저장된 사용자 정보 로드
   Future<UserInfo?> loadUserFromFireStore();
+
+  // emailReauthPassword: 이메일 로그인할때만 사용(재인증용 비밀번호)
+  Future<void> deleteAccount(
+    LoginProvider loginProvider, {
+    String? emailReauthPassword,
+  });
 }

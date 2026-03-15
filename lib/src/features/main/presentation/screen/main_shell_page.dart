@@ -7,6 +7,7 @@ import '../../../../core/router/app_routes.dart';
 import '../../../../core/util/asset_path.dart';
 import '../../../account/domain/model/user_info.dart';
 import '../../../account/presentation/viewmodel/auth_provider.dart';
+import '../widgets/withdraw_dialog.dart';
 
 class MainShellPage extends ConsumerWidget {
   const MainShellPage({super.key, required this.child});
@@ -77,12 +78,19 @@ class MainShellPage extends ConsumerWidget {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: Image(
-              image: AssetImage(AssetPath.signoutIcon),
-              width: 20,
-              height: 20,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: GestureDetector(
+              onTap: () => showWithdrawDialog(
+                context: context,
+                ref: ref,
+                loginProvider: loginProvider,
+              ),
+              child: const Image(
+                image: AssetImage(AssetPath.signoutIcon),
+                width: 20,
+                height: 20,
+              ),
             ),
           ),
         ],

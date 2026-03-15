@@ -24,5 +24,9 @@ class KakaoAuthDataSource {
   Future<void> logout() async {
     await UserApi.instance.logout();
   }
-}
 
+  // 카카오 연동 해제 (회원탈퇴 시 호출)
+  Future<void> signout() async {
+    await UserApi.instance.unlink();
+  }
+}

@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide UserInfo;
+import 'package:waterlogs/src/core/util/firestore_paths.dart';
 
 import '../../domain/model/user_info.dart';
 import '../../domain/repository/account_repository.dart';
 import '../../domain/repository/time_provider.dart';
+import '../datasource/account_remote_datasource.dart';
 import '../datasource/google_auth_datasource.dart';
 import '../datasource/kakao_auth_datasource.dart';
 import '../datasource/naver_auth_datasource.dart';
@@ -19,6 +21,7 @@ class AccountRepositoryImpl implements AccountRepository {
   final FirebaseFirestore _firestore;
   final FirebaseFunctions _functions;
   final TimeProvider _timeProvider;
+  final AccountRemoteDataSource _accountRemote;
   final KakaoAuthDataSource _kakaoAuth;
   final NaverAuthDataSource _naverAuth;
   final GoogleAuthDataSource _googleAuth;
@@ -28,6 +31,7 @@ class AccountRepositoryImpl implements AccountRepository {
     this._firestore,
     this._functions,
     this._timeProvider,
+    this._accountRemote,
     this._kakaoAuth,
     this._naverAuth,
     this._googleAuth,
@@ -35,8 +39,6 @@ class AccountRepositoryImpl implements AccountRepository {
 
   final _controller = StreamController<UserInfo?>.broadcast();
   UserInfo? _current;
-
-  static const _collectionUsers = 'users';
 
   @override
   Stream<UserInfo?> getAccountInfo() => _controller.stream;
@@ -51,7 +53,7 @@ class AccountRepositoryImpl implements AccountRepository {
     final dto = UserInfoMapper.toDto(withCreatedAt);
 
     await _firestore
-        .collection(_collectionUsers)
+        .collection(FirestorePaths.users)
         .doc(withCreatedAt.uid)
         .set(dto.toJson());
 
@@ -61,6 +63,7 @@ class AccountRepositoryImpl implements AccountRepository {
 
   @override
   Future<void> logout(LoginProvider? loginProvider) async {
+    
     switch (loginProvider) {
       case LoginProvider.google:
         await _googleAuth.logout();
@@ -76,6 +79,45 @@ class AccountRepositoryImpl implements AccountRepository {
         break;
     }
     await _auth.signOut();
+    _current = null;
+    _controller.add(null);
+  }
+
+  @override
+  Future<void> deleteAccount(
+    LoginProvider loginProvider, {
+    String? emailReauthPassword,
+  }) async {
+    final uid = _accountRemote.getCurrentUserId();
+    
+    if (uid == null) {
+      throw StateError('user not logged in');
+    }
+
+    switch (loginProvider) {
+      case LoginProvider.kakao:
+        await _kakaoAuth.signout();
+        break;
+      case LoginProvider.naver:
+        await _naverAuth.signout();
+        break;
+      case LoginProvider.google:
+        await _googleAuth.logout();
+        break;
+      case LoginProvider.email:
+        final email = _accountRemote.getCurrentUserEmail();
+        if (email == null || email.isEmpty) {
+          throw StateError('이메일 정보가 없습니다');
+        }
+
+        final password = emailReauthPassword ?? (throw StateError('이메일 회원탈퇴 시 비밀번호가 필요합니다'));
+        await _accountRemote.reauthenticateWithEmail(email: email, password: password);
+        break;
+    }
+
+    await _accountRemote.deleteUserDocument(uid);
+    await _accountRemote.deleteCurrentUser();
+
     _current = null;
     _controller.add(null);
   }
@@ -121,7 +163,10 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<UserInfo> signInWithKakao(String accessToken) async {
+  Future<UserInfo> signInWithKakao() async {
+
+    final accessToken = await _kakaoAuth.getAccessToken();
+
     final result = await _functions
         .httpsCallable('createCustomTokenWithKakao')
         .call({'accessToken': accessToken});
@@ -157,7 +202,10 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<UserInfo> signInWithNaver(String accessToken) async {
+  Future<UserInfo> signInWithNaver() async {
+
+    final accessToken = await _naverAuth.getAccessToken();
+
     final result = await _functions
         .httpsCallable('createCustomTokenWithNaver')
         .call({'accessToken': accessToken});
@@ -193,7 +241,8 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<UserInfo> signInWithGoogle(String idToken) async {
+  Future<UserInfo> signInWithGoogle() async {
+    final idToken = await _googleAuth.getIdToken();
     final credential = GoogleAuthProvider.credential(idToken: idToken);
     await _auth.signInWithCredential(credential);
 
@@ -223,7 +272,7 @@ class AccountRepositoryImpl implements AccountRepository {
     if (firebaseUser == null) return null;
 
     final snapshot = await _firestore
-        .collection(_collectionUsers)
+        .collection(FirestorePaths.users)
         .doc(firebaseUser.uid)
         .get();
 

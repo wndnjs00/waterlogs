@@ -14,20 +14,9 @@ import '../../domain/repository/account_repository.dart';
 class AuthViewModel extends StateNotifier<AuthViewState> {
 
   final AccountRepository _repository;
-  final KakaoAuthDataSource _kakaoAuth;
-  final NaverAuthDataSource _naverAuth;
-  final GoogleAuthDataSource _googleAuth;
   StreamSubscription<UserInfo?>? _userSub;
 
-  AuthViewModel(
-    this._repository, {
-    required KakaoAuthDataSource kakaoAuth,
-    required NaverAuthDataSource naverAuth,
-    required GoogleAuthDataSource googleAuth,
-  })  : _kakaoAuth = kakaoAuth,
-        _naverAuth = naverAuth,
-        _googleAuth = googleAuth,
-        super(AuthViewState.initial) {
+  AuthViewModel(this._repository): super(AuthViewState.initial) {
     _init();
   }
 
@@ -90,20 +79,17 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
   }
 
   Future<void> signInWithKakao() async {
-    final accessToken = await _kakaoAuth.getAccessToken();
-    await _repository.signInWithKakao(accessToken);
+    await _repository.signInWithKakao();
   }
 
   // 네이버 로그인
   Future<void> signInWithNaver() async {
-    final accessToken = await _naverAuth.getAccessToken();
-    await _repository.signInWithNaver(accessToken);
+    await _repository.signInWithNaver();
   }
 
   // 구글 로그인
   Future<void> signInWithGoogle() async {
-    final idToken = await _googleAuth.getIdToken();
-    await _repository.signInWithGoogle(idToken);
+    await _repository.signInWithGoogle();
   }
 
   void resetSignUpState() {
@@ -112,6 +98,16 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
 
   void resetSignInState() {
     state = state.copyWith(signInState: EmailAuthState.idle);
+  }
+
+  Future<void> deleteAccount(
+      LoginProvider provider, {
+        String? emailReauthPassword,
+      }) async {
+    await _repository.deleteAccount(
+      provider,
+      emailReauthPassword: emailReauthPassword,
+    );
   }
 
   @override
