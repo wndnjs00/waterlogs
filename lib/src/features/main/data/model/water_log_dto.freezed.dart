@@ -21,7 +21,7 @@ WaterLogDto _$WaterLogDtoFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$WaterLogDto {
-  String? get date => throw _privateConstructorUsedError;
+  String get date => throw _privateConstructorUsedError;
   int? get cups => throw _privateConstructorUsedError;
   int? get targetCups => throw _privateConstructorUsedError;
   int? get totalMl => throw _privateConstructorUsedError;
@@ -45,7 +45,7 @@ abstract class $WaterLogDtoCopyWith<$Res> {
   ) = _$WaterLogDtoCopyWithImpl<$Res, WaterLogDto>;
   @useResult
   $Res call({
-    String? date,
+    String date,
     int? cups,
     int? targetCups,
     int? totalMl,
@@ -68,7 +68,7 @@ class _$WaterLogDtoCopyWithImpl<$Res, $Val extends WaterLogDto>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? date = freezed,
+    Object? date = null,
     Object? cups = freezed,
     Object? targetCups = freezed,
     Object? totalMl = freezed,
@@ -76,10 +76,10 @@ class _$WaterLogDtoCopyWithImpl<$Res, $Val extends WaterLogDto>
   }) {
     return _then(
       _value.copyWith(
-            date: freezed == date
+            date: null == date
                 ? _value.date
                 : date // ignore: cast_nullable_to_non_nullable
-                      as String?,
+                      as String,
             cups: freezed == cups
                 ? _value.cups
                 : cups // ignore: cast_nullable_to_non_nullable
@@ -112,7 +112,7 @@ abstract class _$$WaterLogDtoImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    String? date,
+    String date,
     int? cups,
     int? targetCups,
     int? totalMl,
@@ -134,7 +134,7 @@ class __$$WaterLogDtoImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? date = freezed,
+    Object? date = null,
     Object? cups = freezed,
     Object? targetCups = freezed,
     Object? totalMl = freezed,
@@ -142,10 +142,10 @@ class __$$WaterLogDtoImplCopyWithImpl<$Res>
   }) {
     return _then(
       _$WaterLogDtoImpl(
-        date: freezed == date
+        date: null == date
             ? _value.date
             : date // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                  as String,
         cups: freezed == cups
             ? _value.cups
             : cups // ignore: cast_nullable_to_non_nullable
@@ -171,7 +171,7 @@ class __$$WaterLogDtoImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$WaterLogDtoImpl implements _WaterLogDto {
   const _$WaterLogDtoImpl({
-    this.date,
+    required this.date,
     this.cups,
     this.targetCups = 8,
     this.totalMl,
@@ -182,7 +182,7 @@ class _$WaterLogDtoImpl implements _WaterLogDto {
       _$$WaterLogDtoImplFromJson(json);
 
   @override
-  final String? date;
+  final String date;
   @override
   final int? cups;
   @override
@@ -233,7 +233,7 @@ class _$WaterLogDtoImpl implements _WaterLogDto {
 
 abstract class _WaterLogDto implements WaterLogDto {
   const factory _WaterLogDto({
-    final String? date,
+    required final String date,
     final int? cups,
     final int? targetCups,
     final int? totalMl,
@@ -244,7 +244,7 @@ abstract class _WaterLogDto implements WaterLogDto {
       _$WaterLogDtoImpl.fromJson;
 
   @override
-  String? get date;
+  String get date;
   @override
   int? get cups;
   @override

@@ -6,7 +6,7 @@ part 'water_log_dto.g.dart';
 @freezed
 class WaterLogDto with _$WaterLogDto {
   const factory WaterLogDto({
-    String? date,
+    required String date,
     int? cups,
     @Default(8) int? targetCups,
     int? totalMl,

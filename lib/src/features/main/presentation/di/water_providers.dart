@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waterlogs/src/features/account/presentation/di/account_providers.dart';
 import 'package:waterlogs/src/features/main/data/datasource/water_remote_datasource.dart';
@@ -15,9 +14,8 @@ final waterRemoteDataSourceProvider = Provider<WaterRemoteDataSource>((ref) {
 
 final waterRepositoryProvider = Provider<WaterRepository>((ref) {
   final dataSource = ref.watch(waterRemoteDataSourceProvider);
-  final firestore = ref.watch(firebaseFirestoreProvider);
   final timeProvider = ref.watch(timeProviderProvider);
-  return WaterRepositoryImpl(dataSource, firestore, timeProvider);
+  return WaterRepositoryImpl(dataSource, timeProvider);
 });
 
 final waterUseCaseProvider = Provider<WaterUseCase>((ref) {

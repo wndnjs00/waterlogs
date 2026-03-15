@@ -8,7 +8,7 @@ part of 'water_log_dto.dart';
 
 _$WaterLogDtoImpl _$$WaterLogDtoImplFromJson(Map<String, dynamic> json) =>
     _$WaterLogDtoImpl(
-      date: json['date'] as String?,
+      date: json['date'] as String,
       cups: (json['cups'] as num?)?.toInt(),
       targetCups: (json['targetCups'] as num?)?.toInt() ?? 8,
       totalMl: (json['totalMl'] as num?)?.toInt(),
