@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:waterlogs/src/core/util/auth_error_mapper.dart';
 import 'package:waterlogs/src/features/account/domain/repository/time_provider.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/auth_provider.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
@@ -37,8 +39,11 @@ class NotificationViewModel extends StateNotifier<NotificationState> {
     if (uid != null) {
       _subscription = _useCase.observe(uid).listen(
         (list) => state = state.copyWith(notifications: list),
-        onError: (_) =>
-            state = state.copyWith(toastMessage: '알림을 불러오지 못했습니다'),
+        onError: (e, _) {
+          state = state.copyWith(
+            toastMessage: AuthErrorMapper.mapForNotification(e),
+          );
+        },
       );
     } else {
       state = state.copyWith(notifications: []);
@@ -50,8 +55,10 @@ class NotificationViewModel extends StateNotifier<NotificationState> {
     if (uid == null) return;
     try {
       await _useCase.markRead(uid, id);
-    } catch (_) {
-      state = state.copyWith(toastMessage: '알림 읽기 처리 실패');
+    } catch (e, _) {
+      state = state.copyWith(
+        toastMessage: AuthErrorMapper.mapForNotification(e),
+      );
     }
   }
 

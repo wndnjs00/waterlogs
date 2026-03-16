@@ -10,8 +10,6 @@ import 'package:waterlogs/src/features/notification/presentation/viewmodel/notif
 class NotificationScreen extends ConsumerWidget {
   const NotificationScreen({super.key});
 
-  static const routePath = '/notification';
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<NotificationState>(
