@@ -8,8 +8,8 @@ import '../../../../core/util/asset_path.dart';
 import '../../../account/domain/model/user_info.dart';
 import '../../../account/presentation/viewmodel/auth_provider.dart';
 import '../../../account/presentation/viewmodel/state/auth_view_state.dart';
-import '../widgets/badge_info_dialog.dart';
-import '../widgets/signout_dialog.dart';
+import '../widgets/dialog/badge_info_dialog.dart';
+import '../widgets/dialog/signout_dialog.dart';
 
 class MainShellPage extends ConsumerWidget {
   const MainShellPage({super.key, required this.child});
