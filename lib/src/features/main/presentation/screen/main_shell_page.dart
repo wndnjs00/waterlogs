@@ -8,6 +8,7 @@ import '../../../../core/util/asset_path.dart';
 import '../../../account/domain/model/user_info.dart';
 import '../../../account/presentation/viewmodel/auth_provider.dart';
 import '../../../account/presentation/viewmodel/state/auth_view_state.dart';
+import '../widgets/badge_info_dialog.dart';
 import '../widgets/signout_dialog.dart';
 
 class MainShellPage extends ConsumerWidget {
@@ -70,12 +71,15 @@ class MainShellPage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('WaterLog'),
         actions: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: Image(
-              image: AssetImage(AssetPath.badgeIcon),
-              width: 24,
-              height: 24,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: GestureDetector(
+              onTap: () => showBadgeInfoDialog(context),
+              child: const Image(
+                image: AssetImage(AssetPath.badgeIcon),
+                width: 24,
+                height: 24,
+              ),
             ),
           ),
           const Padding(
