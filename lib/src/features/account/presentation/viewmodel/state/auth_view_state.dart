@@ -10,6 +10,7 @@ class AuthViewState with _$AuthViewState {
     UserInfo? user,
     @Default(EmailAuthState.idle) EmailAuthState signUpState,
     @Default(EmailAuthState.idle) EmailAuthState signInState,
+    String? toastMessage,
   }) = _AuthViewState;
 
   const AuthViewState._();

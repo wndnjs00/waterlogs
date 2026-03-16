@@ -20,6 +20,7 @@ mixin _$AuthViewState {
   UserInfo? get user => throw _privateConstructorUsedError;
   EmailAuthState get signUpState => throw _privateConstructorUsedError;
   EmailAuthState get signInState => throw _privateConstructorUsedError;
+  String? get toastMessage => throw _privateConstructorUsedError;
 
   /// Create a copy of AuthViewState
   /// with the given fields replaced by the non-null parameter values.
@@ -39,6 +40,7 @@ abstract class $AuthViewStateCopyWith<$Res> {
     UserInfo? user,
     EmailAuthState signUpState,
     EmailAuthState signInState,
+    String? toastMessage,
   });
 
   $UserInfoCopyWith<$Res>? get user;
@@ -64,6 +66,7 @@ class _$AuthViewStateCopyWithImpl<$Res, $Val extends AuthViewState>
     Object? user = freezed,
     Object? signUpState = null,
     Object? signInState = null,
+    Object? toastMessage = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -79,6 +82,10 @@ class _$AuthViewStateCopyWithImpl<$Res, $Val extends AuthViewState>
                 ? _value.signInState
                 : signInState // ignore: cast_nullable_to_non_nullable
                       as EmailAuthState,
+            toastMessage: freezed == toastMessage
+                ? _value.toastMessage
+                : toastMessage // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -132,6 +139,7 @@ abstract class _$$AuthViewStateImplCopyWith<$Res>
     UserInfo? user,
     EmailAuthState signUpState,
     EmailAuthState signInState,
+    String? toastMessage,
   });
 
   @override
@@ -159,6 +167,7 @@ class __$$AuthViewStateImplCopyWithImpl<$Res>
     Object? user = freezed,
     Object? signUpState = null,
     Object? signInState = null,
+    Object? toastMessage = freezed,
   }) {
     return _then(
       _$AuthViewStateImpl(
@@ -174,6 +183,10 @@ class __$$AuthViewStateImplCopyWithImpl<$Res>
             ? _value.signInState
             : signInState // ignore: cast_nullable_to_non_nullable
                   as EmailAuthState,
+        toastMessage: freezed == toastMessage
+            ? _value.toastMessage
+            : toastMessage // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -186,6 +199,7 @@ class _$AuthViewStateImpl extends _AuthViewState {
     this.user,
     this.signUpState = EmailAuthState.idle,
     this.signInState = EmailAuthState.idle,
+    this.toastMessage,
   }) : super._();
 
   @override
@@ -196,10 +210,12 @@ class _$AuthViewStateImpl extends _AuthViewState {
   @override
   @JsonKey()
   final EmailAuthState signInState;
+  @override
+  final String? toastMessage;
 
   @override
   String toString() {
-    return 'AuthViewState(user: $user, signUpState: $signUpState, signInState: $signInState)';
+    return 'AuthViewState(user: $user, signUpState: $signUpState, signInState: $signInState, toastMessage: $toastMessage)';
   }
 
   @override
@@ -211,11 +227,14 @@ class _$AuthViewStateImpl extends _AuthViewState {
             (identical(other.signUpState, signUpState) ||
                 other.signUpState == signUpState) &&
             (identical(other.signInState, signInState) ||
-                other.signInState == signInState));
+                other.signInState == signInState) &&
+            (identical(other.toastMessage, toastMessage) ||
+                other.toastMessage == toastMessage));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, user, signUpState, signInState);
+  int get hashCode =>
+      Object.hash(runtimeType, user, signUpState, signInState, toastMessage);
 
   /// Create a copy of AuthViewState
   /// with the given fields replaced by the non-null parameter values.
@@ -231,6 +250,7 @@ abstract class _AuthViewState extends AuthViewState {
     final UserInfo? user,
     final EmailAuthState signUpState,
     final EmailAuthState signInState,
+    final String? toastMessage,
   }) = _$AuthViewStateImpl;
   const _AuthViewState._() : super._();
 
@@ -240,6 +260,8 @@ abstract class _AuthViewState extends AuthViewState {
   EmailAuthState get signUpState;
   @override
   EmailAuthState get signInState;
+  @override
+  String? get toastMessage;
 
   /// Create a copy of AuthViewState
   /// with the given fields replaced by the non-null parameter values.

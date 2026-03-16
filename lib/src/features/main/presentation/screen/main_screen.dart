@@ -31,6 +31,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // auth 토스트는 MainShellPage에서만 표시 (중복 SnackBar 방지)
     ref.listen<AuthViewState>(authViewModelProvider, (prev, next) {
       final user = next.user;
       if (user != null) {

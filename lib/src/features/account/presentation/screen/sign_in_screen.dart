@@ -33,8 +33,20 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     final viewModel = ref.read(authViewModelProvider.notifier);
 
     ref.listen<AuthViewState>(authViewModelProvider, (previous, next) {
-      if (previous?.signInState.status != EmailAuthState.success &&
-          next.signInState.status == EmailAuthStatus.success) {
+      final msg = next.toastMessage;
+      if (msg != null && msg.isNotEmpty && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+        viewModel.clearToast();
+      }
+    });
+
+    ref.listen<AuthViewState>(authViewModelProvider, (previous, next) {
+      if (previous?.signInState.status != EmailAuthStatus.success && next.signInState.status == EmailAuthStatus.success) {
+        if (next.user != null && context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('${next.user!.name}님 환영합니다')),
+          );
+        }
         viewModel.resetSignInState();
         context.go(AppRoutes.main);
       }

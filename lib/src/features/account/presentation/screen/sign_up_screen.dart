@@ -6,46 +6,68 @@ import 'package:waterlogs/src/features/account/presentation/viewmodel/auth_provi
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/email_auth_state.dart';
 
-class SignUpScreen extends ConsumerWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  bool _allChecked = false;
+  bool _termsChecked = false;
+  bool _privacyChecked = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(authViewModelProvider);
     final viewModel = ref.read(authViewModelProvider.notifier);
 
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final confirmPasswordController = TextEditingController();
+    ref.listen<AuthViewState>(authViewModelProvider, (previous, next) {
+        final msg = next.toastMessage;
 
-    bool allChecked = false;
-    bool termsChecked = false;
-    bool privacyChecked = false;
+        if (msg != null && msg.isNotEmpty && context.mounted) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(msg)));
 
-    ref.listen<AuthViewState>(
-      authViewModelProvider,
-      (previous, next) {
-        if (previous?.signUpState.status != EmailAuthState.success &&
+          viewModel.clearToast();
+        }
+      },
+    );
+
+    ref.listen<AuthViewState>(authViewModelProvider, (previous, next) {
+        if (previous?.signUpState.status != EmailAuthStatus.success &&
             next.signUpState.status == EmailAuthStatus.success) {
+
           viewModel.resetSignUpState();
           Navigator.of(context).pop(); // 가입 완료 후 이전 화면(로그인)으로
         }
       },
     );
 
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    final isValidEmail = AuthValidator.isValidEmail(email);
+    final isValidPassword = AuthValidator.isValidPassword(password);
+
+    final isPasswordMatch = password.isNotEmpty && password == confirmPassword;
+
+    final isFormValid = isValidEmail && isValidPassword && isPasswordMatch && _termsChecked && _privacyChecked;
     final isLoading = state.signUpState.status == EmailAuthStatus.loading;
-
-    return StatefulBuilder(
-      builder: (context, setState) {
-        final email = emailController.text.trim();
-        final password = passwordController.text;
-        final confirmPassword = confirmPasswordController.text;
-
-        final isValidEmail = AuthValidator.isValidEmail(email);
-        final isValidPassword = AuthValidator.isValidPassword(password);
-
-        final isPasswordMatch = password.isNotEmpty && password == confirmPassword;
-        final isFormValid = isValidEmail && isValidPassword && isPasswordMatch && termsChecked && privacyChecked;
 
         return Scaffold(
           backgroundColor: Colors.white,
@@ -63,24 +85,18 @@ class SignUpScreen extends ConsumerWidget {
                   const SizedBox(height: 8),
                   const Text(
                     '이메일로 회원가입',
-                    style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold
-                    ),
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
-            
+
                   const SizedBox(height: 8),
-            
+
                   const Text(
                     '워터로그와 함께 건강한 수분 섭취를 시작하세요',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
                   ),
                   const SizedBox(height: 40),
                   TextField(
-                    controller: emailController,
+                    controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (_) => setState(() {}),
                     decoration: const InputDecoration(
@@ -94,15 +110,12 @@ class SignUpScreen extends ConsumerWidget {
                       padding: EdgeInsets.only(top: 4),
                       child: Text(
                         '이메일 주소형식에 맞게 입력해주세요',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 12,
-                        ),
+                        style: TextStyle(color: Colors.red, fontSize: 12),
                       ),
                     ),
                   const SizedBox(height: 12),
                   TextField(
-                    controller: passwordController,
+                    controller: _passwordController,
                     obscureText: true,
                     onChanged: (_) => setState(() {}),
                     decoration: const InputDecoration(
@@ -116,15 +129,12 @@ class SignUpScreen extends ConsumerWidget {
                       padding: EdgeInsets.only(top: 4),
                       child: Text(
                         '비밀번호는 8자 이상이며, 영문/숫자/특수문자를 모두 포함해야 합니다',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 12,
-                        ),
+                        style: TextStyle(color: Colors.red, fontSize: 12),
                       ),
                     ),
                   const SizedBox(height: 12),
                   TextField(
-                    controller: confirmPasswordController,
+                    controller: _confirmPasswordController,
                     obscureText: true,
                     onChanged: (_) => setState(() {}),
                     decoration: const InputDecoration(
@@ -138,29 +148,23 @@ class SignUpScreen extends ConsumerWidget {
                       padding: EdgeInsets.only(top: 4),
                       child: Text(
                         '비밀번호가 일치하지 않습니다',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 12,
-                        ),
+                        style: TextStyle(color: Colors.red, fontSize: 12),
                       ),
                     ),
                   const SizedBox(height: 24),
                   Row(
                     children: [
                       Checkbox(
-                        value: allChecked,
+                        value: _allChecked,
                         onChanged: (checked) {
                           setState(() {
-                            allChecked = checked ?? false;
-                            termsChecked = allChecked;
-                            privacyChecked = allChecked;
+                            _allChecked = checked ?? false;
+                            _termsChecked = _allChecked;
+                            _privacyChecked = _allChecked;
                           });
                         },
                       ),
-                      const Text(
-                        '전체 동의',
-                        style: TextStyle(fontSize: 14),
-                      ),
+                      const Text('전체 동의', style: TextStyle(fontSize: 14)),
                     ],
                   ),
                   const Divider(),
@@ -169,11 +173,11 @@ class SignUpScreen extends ConsumerWidget {
                       Row(
                         children: [
                           Checkbox(
-                            value: termsChecked,
+                            value: _termsChecked,
                             onChanged: (checked) {
                               setState(() {
-                                termsChecked = checked ?? false;
-                                allChecked = termsChecked && privacyChecked;
+                                _termsChecked = checked ?? false;
+                                _allChecked = _termsChecked && _privacyChecked;
                               });
                             },
                           ),
@@ -194,11 +198,11 @@ class SignUpScreen extends ConsumerWidget {
                       Row(
                         children: [
                           Checkbox(
-                            value: privacyChecked,
+                            value: _privacyChecked,
                             onChanged: (checked) {
                               setState(() {
-                                privacyChecked = checked ?? false;
-                                allChecked = termsChecked && privacyChecked;
+                                _privacyChecked= checked ?? false;
+                                _allChecked = _termsChecked && _privacyChecked;
                               });
                             },
                           ),
@@ -260,17 +264,12 @@ class SignUpScreen extends ConsumerWidget {
                       state.signUpState.message != null)
                     Text(
                       state.signUpState.message!,
-                      style: const TextStyle(
-                        color: Colors.red,
-                        fontSize: 12,
-                      ),
+                      style: const TextStyle(color: Colors.red, fontSize: 12),
                     ),
                 ],
               ),
             ),
           ),
         );
-      },
-    );
+      }
   }
-}

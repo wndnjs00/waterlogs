@@ -7,7 +7,7 @@ import 'package:waterlogs/src/core/theme/app_colors.dart';
 import 'package:waterlogs/src/features/account/domain/model/user_info.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/auth_provider.dart';
 
-void showWithdrawDialog({
+void signOutDialog({
   required BuildContext context,
   required WidgetRef ref,
   required LoginProvider? loginProvider,
@@ -85,9 +85,7 @@ class _WithdrawDialogContentState extends State<_WithdrawDialogContent> {
       if (!mounted) return;
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(widget.parentContext).showSnackBar(
-        SnackBar(
-          content: Text(e is StateError ? e.message : '회원탈퇴 실패'),
-        ),
+        const SnackBar(content: Text('회원탈퇴 실패')),
       );
     }
   }

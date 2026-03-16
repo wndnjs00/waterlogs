@@ -20,9 +20,7 @@ class LoginScreen extends ConsumerWidget {
       await action();
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e is StateError ? e.message : e.toString())),
-        );
+        ref.read(authViewModelProvider.notifier).showOAuthError(e);
       }
     }
   }
@@ -31,9 +29,21 @@ class LoginScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authViewModelProvider);
 
-    // 자동 로그인: 이미 로그인된 유저가 있으면 바로 메인으로 이동
+    // 에러 토스트
     ref.listen<AuthViewState>(authViewModelProvider, (previous, next) {
-      if (previous?.user == null && next.user != null) {
+      final msg = next.toastMessage;
+      if (msg != null && msg.isNotEmpty && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+        ref.read(authViewModelProvider.notifier).clearToast();
+      }
+    });
+
+    // 자동 로그인: 이미 로그인된 유저가 있으면 메인으로 이동
+    ref.listen<AuthViewState>(authViewModelProvider, (previous, next) {
+      if (previous?.user == null && next.user != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${next.user!.name}님 환영합니다')),
+        );
         context.go(AppRoutes.main);
       }
     });
@@ -86,6 +96,7 @@ class LoginScreen extends ConsumerWidget {
 
               _EmailSignUpButton(
                 onTap: () {
+                  ref.read(authViewModelProvider.notifier).resetSignUpState();
                   context.push(AppRoutes.signUp);
                 },
               ),
@@ -101,6 +112,8 @@ class LoginScreen extends ConsumerWidget {
 
               GestureDetector(
                 onTap: () {
+                  // 이메일 로그인 화면으로 들어가기 전에 이전 에러 상태 초기화
+                  ref.read(authViewModelProvider.notifier).resetSignInState();
                   context.push(AppRoutes.signIn);
                 },
                 child: const Text(

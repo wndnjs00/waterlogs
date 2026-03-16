@@ -266,6 +266,7 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   // 자동 로그인용: 저장된 사용자 정보 로드
+  // Auth 세션은 있는데 Firestore 사용자 문서가 없으면 예외 발생 (불일치 상태 방지 → '토큰 문제' 처리)
   @override
   Future<UserInfo?> loadUserFromFireStore() async {
     final firebaseUser = _auth.currentUser;
@@ -276,10 +277,20 @@ class AccountRepositoryImpl implements AccountRepository {
         .doc(firebaseUser.uid)
         .get();
 
-    if (!snapshot.exists) return null;
+    if (!snapshot.exists) {
+      throw FirebaseAuthException(
+        code: 'user-token-mismatch',
+        message: 'Firestore user document not found for current auth user',
+      );
+    }
 
     final data = snapshot.data();
-    if (data == null) return null;
+    if (data == null) {
+      throw FirebaseAuthException(
+        code: 'user-token-mismatch',
+        message: 'Firestore user data is null',
+      );
+    }
 
     final dto = UserInfoDto.fromJson(data);
     final domain = UserInfoMapper.toDomain(dto);

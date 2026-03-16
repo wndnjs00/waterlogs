@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:waterlogs/src/core/util/auth_error_mapper.dart';
 import 'package:waterlogs/src/features/account/domain/usecase/account_usecase.dart';
 import 'package:waterlogs/src/features/account/domain/usecase/auth_usecase.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
@@ -28,17 +29,29 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
   }
 
   void _init() {
-
     // 자동 로그인: Firebase 현재 유저 + Firestore 정보 불러오기
     _accountUseCase.loadUser().then((user) {
       if (user != null) {
         state = state.copyWith(user: user);
       }
+    }).catchError((e) async {
+      state = state.copyWith(toastMessage: AuthErrorMapper.map(e));
+      // Auth 세션은 있는데 Firestore 문서 없음 (불일치 시) → 로그아웃하여 로그인 화면에서 재시도 가능하게
+      await _accountUseCase.logout(null);
     });
 
     _userSub = _accountUseCase.getAccountInfo().listen((user) {
       state = state.copyWith(user: user);
     });
+  }
+
+  void clearToast() {
+    state = state.copyWith(toastMessage: null);
+  }
+
+  // OAuth(Google/Kakao/Naver) 로그인 실패 시 토스트 메시지
+  void showOAuthError(Object e) {
+    state = state.copyWith(toastMessage: AuthErrorMapper.mapForOAuth(e));
   }
 
   Future<void> signUpWithEmail({
@@ -57,11 +70,13 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
 
       state = state.copyWith(signUpState: EmailAuthState.success);
     } catch (e) {
+      final msg = AuthErrorMapper.map(e);
       state = state.copyWith(
         signUpState: EmailAuthState(
           status: EmailAuthStatus.error,
-          message: e.toString(),
+          message: msg,
         ),
+        toastMessage: msg,
       );
     }
   }
@@ -78,17 +93,24 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
       state = state.copyWith(signInState: EmailAuthState.success);
 
     } catch (e) {
+      final msg = AuthErrorMapper.map(e);
       state = state.copyWith(
         signInState: EmailAuthState(
           status: EmailAuthStatus.error,
-          message: e.toString()
+          message: msg,
         ),
+        toastMessage: msg,
       );
     }
   }
 
   Future<void> logout(LoginProvider? provider) async {
-    await _accountUseCase.logout(provider);
+    try {
+      await _accountUseCase.logout(provider);
+      state = state.copyWith(toastMessage: '로그아웃 되었습니다');
+    } catch (e) {
+      state = state.copyWith(toastMessage: AuthErrorMapper.map(e));
+    }
   }
 
   Future<void> signInWithKakao() async {
@@ -117,10 +139,14 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
       LoginProvider provider, {
         String? emailReauthPassword,
       }) async {
-    await _accountUseCase.deleteAccount(
-      provider,
-      emailReauthPassword: emailReauthPassword,
-    );
+    try {
+      await _accountUseCase.deleteAccount(
+        provider,
+        emailReauthPassword: emailReauthPassword,
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:waterlogs/src/core/util/auth_error_mapper.dart';
 import 'package:waterlogs/src/features/account/domain/repository/time_provider.dart';
 import 'package:waterlogs/src/features/main/domain/model/water_log.dart';
 import 'package:waterlogs/src/features/main/domain/usecase/water_usecase.dart';
@@ -31,7 +32,7 @@ class WaterViewModel extends StateNotifier<WaterViewState> {
       await _loadWeeklyAndMonthly(uid);
 
     } catch (e) {
-      state = state.copyWith(errorMessage: e.toString());
+      state = state.copyWith(errorMessage: AuthErrorMapper.mapForWaterUpdate(e));
     }
   }
 
@@ -83,7 +84,7 @@ class WaterViewModel extends StateNotifier<WaterViewState> {
       state = state.copyWith(todayLog: newLog, isUpdating: false);
       await _loadWeeklyAndMonthly(uid);
     } catch (e) {
-      state = state.copyWith(isUpdating: false, errorMessage: e.toString());
+      state = state.copyWith(isUpdating: false, errorMessage: AuthErrorMapper.mapForWaterUpdate(e));
     }
   }
 

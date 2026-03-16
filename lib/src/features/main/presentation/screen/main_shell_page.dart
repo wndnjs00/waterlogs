@@ -7,7 +7,8 @@ import '../../../../core/router/app_routes.dart';
 import '../../../../core/util/asset_path.dart';
 import '../../../account/domain/model/user_info.dart';
 import '../../../account/presentation/viewmodel/auth_provider.dart';
-import '../widgets/withdraw_dialog.dart';
+import '../../../account/presentation/viewmodel/state/auth_view_state.dart';
+import '../widgets/signout_dialog.dart';
 
 class MainShellPage extends ConsumerWidget {
   const MainShellPage({super.key, required this.child});
@@ -51,6 +52,20 @@ class MainShellPage extends ConsumerWidget {
     final authState = ref.watch(authViewModelProvider);
     final loginProvider = authState.user?.loginProvider;
 
+    ref.listen<AuthViewState>(authViewModelProvider, (previous, next) {
+      final msg = next.toastMessage;
+      if (msg != null && msg.isNotEmpty && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+        ref.read(authViewModelProvider.notifier).clearToast();
+      }
+    });
+
+    ref.listen<AuthViewState>(authViewModelProvider, (previous, next) {
+      if (previous?.user != null && next.user == null && context.mounted) {
+        context.go(AppRoutes.login);
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('WaterLog'),
@@ -81,7 +96,7 @@ class MainShellPage extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: GestureDetector(
-              onTap: () => showWithdrawDialog(
+              onTap: () => signOutDialog(
                 context: context,
                 ref: ref,
                 loginProvider: loginProvider,
