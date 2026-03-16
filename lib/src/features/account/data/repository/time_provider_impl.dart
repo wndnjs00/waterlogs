@@ -51,6 +51,28 @@ class TimeProviderImpl implements TimeProvider {
     return _isoDate(DateTime.now());
   }
 
+  // 알림 목록 표시용 시간 (HH:mm)
+  @override
+  String formatNotificationTime(String dateTime) {
+    try {
+      // ISO 형식 (yyyy-MM-dd'T'HH:mm:ss'Z')
+      if (dateTime.contains('T')) {
+        final dt = DateTime.parse(dateTime);
+        return '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+      }
+      // Flutter 저장 형식 (yyyy/MM/dd HH:mm:ss)
+      final parts = dateTime.split(' ');
+      if (parts.length >= 2) {
+        final timePart = parts[1];
+        final timeComponents = timePart.split(':');
+        if (timeComponents.length >= 2) {
+          return '${timeComponents[0].padLeft(2, '0')}:${timeComponents[1].padLeft(2, '0')}';
+        }
+      }
+    } catch (_) {}
+    return '--:--';
+  }
+
   String _format({required DateTime dt, required bool withTime}) {
     final y = dt.year.toString().padLeft(4, '0');
     final m = dt.month.toString().padLeft(2, '0');
@@ -71,5 +93,4 @@ class TimeProviderImpl implements TimeProvider {
     final d = dt.day.toString().padLeft(2, '0');
     return '$y-$m-$d';
   }
-
 }

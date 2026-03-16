@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:waterlogs/src/core/router/app_routes.dart';
 import 'package:waterlogs/src/core/theme/app_colors.dart';
 import 'package:waterlogs/src/core/validator/auth_validator.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/auth_provider.dart';
@@ -48,14 +50,14 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     );
 
     ref.listen<AuthViewState>(authViewModelProvider, (previous, next) {
-        if (previous?.signUpState.status != EmailAuthStatus.success &&
-            next.signUpState.status == EmailAuthStatus.success) {
+      if (previous?.signUpState.status != EmailAuthStatus.success && next.signUpState.status == EmailAuthStatus.success) {
+        viewModel.resetSignUpState();
 
-          viewModel.resetSignUpState();
-          Navigator.of(context).pop(); // 가입 완료 후 이전 화면(로그인)으로
+        if (context.mounted) {
+          context.go(AppRoutes.login);
         }
-      },
-    );
+      }
+    });
 
     final email = _emailController.text.trim();
     final password = _passwordController.text;

@@ -57,8 +57,32 @@ class AccountRepositoryImpl implements AccountRepository {
         .doc(withCreatedAt.uid)
         .set(dto.toJson());
 
+    await _createWelcomeNotificationIfNeeded(withCreatedAt.uid, withCreatedAt.name);
+
     _current = withCreatedAt;
     _controller.add(withCreatedAt);
+  }
+
+  // 첫 로그인/저장 시 welcome 알림
+  Future<void> _createWelcomeNotificationIfNeeded(String uid, String name) async {
+    final notificationsRef = _firestore
+        .collection(FirestorePaths.users)
+        .doc(uid)
+        .collection(FirestorePaths.notifications);
+
+    final snapshot = await notificationsRef
+        .where('type', isEqualTo: 'welcome')
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      await notificationsRef.doc().set({
+        'title': '환영합니다 ${name}님 🎉',
+        'message': 'WaterLog와 함께 건강한 수분습관을 시작해보세요!',
+        'type': 'welcome',
+        'createdAt': _timeProvider.nowDateTimeString(),
+        'isRead': false,
+      });
+    }
   }
 
   @override
@@ -299,5 +323,27 @@ class AccountRepositoryImpl implements AccountRepository {
     _controller.add(domain);
 
     return domain;
+  }
+
+  @override
+  Future<void> saveFcmToken(String token) async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    final userRef = _firestore
+        .collection(FirestorePaths.users)
+        .doc(user.uid);
+
+    final snapshot = await userRef.get();
+    final data = snapshot.data();
+    final existingToken = data != null ? data['fcmToken'] as String? : null;
+
+    await userRef.update({'fcmToken': token});
+
+    // 최초 토큰 저장 시 welcome 알림을 보장
+    if (existingToken == null) {
+      final name = data != null ? data['name'] as String? ?? 'waterLog' : 'waterLog';
+      await _createWelcomeNotificationIfNeeded(user.uid, name);
+    }
   }
 }

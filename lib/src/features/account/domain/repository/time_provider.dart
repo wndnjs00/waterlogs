@@ -5,4 +5,6 @@ abstract class TimeProvider {
   String weekStart();
   String monthStart();
   String waterLogDateString();
+  // 알림 목록 표시용 시간 (HH:mm)
+  String formatNotificationTime(String dateTime);
 }

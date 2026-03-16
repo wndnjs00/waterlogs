@@ -8,6 +8,7 @@ import '../../../../core/util/asset_path.dart';
 import '../../../account/domain/model/user_info.dart';
 import '../../../account/presentation/viewmodel/auth_provider.dart';
 import '../../../account/presentation/viewmodel/state/auth_view_state.dart';
+import '../../../notification/presentation/di/notification_providers.dart';
 import '../widgets/dialog/badge_info_dialog.dart';
 import '../widgets/dialog/signout_dialog.dart';
 
@@ -52,6 +53,8 @@ class MainShellPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authViewModelProvider);
     final loginProvider = authState.user?.loginProvider;
+    final notificationState = ref.watch(notificationViewModelProvider);
+    final unreadCount = notificationState.unreadCount;
 
     ref.listen<AuthViewState>(authViewModelProvider, (previous, next) {
       final msg = next.toastMessage;
@@ -82,9 +85,22 @@ class MainShellPage extends ConsumerWidget {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: Icon(Icons.notifications, size: 28),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: Badge(
+              isLabelVisible: unreadCount > 0,
+              alignment: AlignmentDirectional.topEnd,
+              offset: const Offset(-7, 9),
+              label: Text(
+                unreadCount > 99 ? '99+' : unreadCount.toString(),
+                style: const TextStyle(fontSize: 10, color: Colors.white),
+              ),
+              backgroundColor: Colors.red,
+              child: IconButton(
+                icon: const Icon(Icons.notifications, size: 28),
+                onPressed: () => context.push(AppRoutes.notification),
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),

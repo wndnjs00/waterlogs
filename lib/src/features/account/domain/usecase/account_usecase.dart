@@ -28,4 +28,8 @@ class AccountUseCase {
   Stream<UserInfo?> getAccountInfo() {
     return repository.getAccountInfo();
   }
+
+  Future<void> saveFcmToken(String token) {
+    return repository.saveFcmToken(token);
+  }
 }

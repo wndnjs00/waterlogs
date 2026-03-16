@@ -5,6 +5,7 @@ import 'package:waterlogs/src/core/router/app_routes.dart';
 import '../../features/main/presentation/screen/main_shell_page.dart';
 import '../../features/main/presentation/screen/main_screen.dart';
 import '../../features/main/presentation/screen/ai_helper_screen.dart';
+import '../../features/notification/presentation/screen/notification_screen.dart';
 import '../../features/account/presentation/screen/login_screen.dart';
 import '../../features/account/presentation/screen/sign_in_screen.dart';
 import '../../features/account/presentation/screen/sign_up_screen.dart';
@@ -27,6 +28,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.signUp,
         name: AppRoutes.signUpName,
         builder: (context, state) => const SignUpScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.notification,
+        name: AppRoutes.notificationName,
+        builder: (context, state) => const NotificationScreen(),
       ),
 
       ShellRoute(

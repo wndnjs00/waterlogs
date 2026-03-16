@@ -6,6 +6,7 @@ class AppRoutes {
   static const signUp = '/login/sign-up';
   static const main = '/main';
   static const aiHelper = '/ai';
+  static const notification = '/notification';
 
   // routeName
   static const loginName = 'login';
@@ -13,5 +14,5 @@ class AppRoutes {
   static const signUpName = 'signUp';
   static const mainName = 'main';
   static const aiName = 'ai';
-  
+  static const notificationName = 'notification';
 }

@@ -34,4 +34,7 @@ abstract class AccountRepository {
     LoginProvider loginProvider, {
     String? emailReauthPassword,
   });
+
+  // FCM 토큰 저장 (push 알림용)
+  Future<void> saveFcmToken(String token);
 }
