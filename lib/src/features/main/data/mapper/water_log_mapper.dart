@@ -4,7 +4,7 @@ import '../model/water_log_dto.dart';
 class WaterLogMapper {
   static WaterLog toDomain(WaterLogDto dto) {
     return WaterLog(
-      date: dto.date ?? '',
+      date: dto.date,
       cups: dto.cups ?? 0,
       targetCups: dto.targetCups ?? 8,
       totalMl: dto.totalMl ?? 0,

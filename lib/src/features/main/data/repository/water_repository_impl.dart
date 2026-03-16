@@ -5,7 +5,6 @@ import 'package:waterlogs/src/features/main/domain/repository/water_repository.d
 import 'package:waterlogs/src/features/main/data/datasource/water_remote_datasource.dart';
 import 'package:waterlogs/src/features/main/data/mapper/water_log_mapper.dart';
 import 'package:waterlogs/src/features/main/data/model/save_with_achievement_result.dart';
-import 'package:waterlogs/src/features/main/data/model/water_log_dto.dart';
 import 'package:waterlogs/src/features/main/domain/util/streak_calculator.dart';
 
 class WaterRepositoryImpl implements WaterRepository {

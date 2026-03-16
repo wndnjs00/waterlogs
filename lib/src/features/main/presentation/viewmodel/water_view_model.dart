@@ -4,6 +4,7 @@ import 'package:waterlogs/src/features/account/domain/repository/time_provider.d
 import 'package:waterlogs/src/features/main/domain/model/water_log.dart';
 import 'package:waterlogs/src/features/main/domain/usecase/water_usecase.dart';
 import 'package:waterlogs/src/features/main/presentation/viewmodel/state/water_view_state.dart';
+
 class WaterViewModel extends StateNotifier<WaterViewState> {
   final WaterUseCase _waterUseCase;
   final TimeProvider _timeProvider;

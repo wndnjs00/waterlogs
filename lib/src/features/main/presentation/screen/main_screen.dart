@@ -5,6 +5,7 @@ import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth
 import 'package:waterlogs/src/features/main/presentation/di/water_providers.dart';
 import 'package:waterlogs/src/features/main/presentation/viewmodel/state/water_view_state.dart';
 import 'package:waterlogs/src/features/main/presentation/widgets/main_navigation_content.dart';
+
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
 
