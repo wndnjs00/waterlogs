@@ -27,6 +27,15 @@ class _BadgeScreenState extends ConsumerState<BadgeScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen<BadgeState>(badgeViewModelProvider, (prev, next) {
+      final msg = next.toastMessage;
+
+      if (msg != null && msg.isNotEmpty && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(msg)),
+        );
+        ref.read(badgeViewModelProvider.notifier).clearToast();
+      }
+
       final keys = next.pendingEarnedDialogKeys;
       if (keys.isEmpty) return;
 

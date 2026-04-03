@@ -7,4 +7,7 @@ class BadgeUseCase {
   BadgeUseCase(this._repository);
 
   Stream<Map<String, Badge>> observe(String uid) => _repository.observeBadges(uid);
+
+  Future<void> verifyServerCanLoadBadges(String uid) =>
+      _repository.verifyServerCanLoadBadges(uid);
 }

@@ -10,6 +10,16 @@ class BadgeRepositoryImpl implements BadgeRepository {
   final FirebaseFirestore _firestore;
 
   @override
+  Future<void> verifyServerCanLoadBadges(String uid) {
+    return _firestore
+        .collection(FirestorePaths.users)
+        .doc(uid)
+        .collection(FirestorePaths.badges)
+        .limit(1)
+        .get(const GetOptions(source: Source.server));
+  }
+
+  @override
   Stream<Map<String, Badge>> observeBadges(String uid) {
     return _firestore
         .collection(FirestorePaths.users)

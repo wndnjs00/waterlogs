@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:waterlogs/src/core/util/auth_error_mapper.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/auth_provider.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
 import 'package:waterlogs/src/features/badge/domain/model/badge.dart';
@@ -10,11 +11,6 @@ import 'package:waterlogs/src/features/badge/domain/usecase/badge_usecase.dart';
 import 'package:waterlogs/src/features/badge/presentation/viewmodel/badge_state.dart';
 
 class BadgeViewModel extends StateNotifier<BadgeState> {
-  final Ref _ref;
-  final BadgeUseCase _useCase;
-  final BadgeShownStoreRepository _shownStore;
-  StreamSubscription<Map<String, Badge>>? _subscription;
-
   BadgeViewModel(
     this._ref,
     this._useCase,
@@ -29,6 +25,16 @@ class BadgeViewModel extends StateNotifier<BadgeState> {
     );
   }
 
+  final Ref _ref;
+  final BadgeUseCase _useCase;
+  final BadgeShownStoreRepository _shownStore;
+  StreamSubscription<Map<String, Badge>>? _subscription;
+
+  /// [_onAuthChanged]가 연달아 호출될 때 이전 비동기 구독 설정을 무시하기 위함
+  int _attachGeneration = 0;
+
+  bool _disposed = false;
+
   void _onAuthChanged(AuthViewState authState) {
     _subscription?.cancel();
     _subscription = null;
@@ -39,14 +45,40 @@ class BadgeViewModel extends StateNotifier<BadgeState> {
       return;
     }
 
+    final gen = ++_attachGeneration;
+    scheduleMicrotask(() => _attachBadgeStream(uid, gen));
+  }
+
+  Future<void> _attachBadgeStream(String uid, int gen) async {
+    try {
+      await _useCase.verifyServerCanLoadBadges(uid);
+    } catch (e, _) {
+      if (_disposed || gen != _attachGeneration) return;
+      if (_ref.read(authViewModelProvider).user?.uid != uid) return;
+      state = state.copyWith(
+        toastMessage: AuthErrorMapper.mapForBadge(e),
+      );
+    }
+
+    if (_disposed || gen != _attachGeneration) return;
+    if (_ref.read(authViewModelProvider).user?.uid != uid) return;
+
     _subscription = _useCase.observe(uid).listen(
       _onBadgesSnapshot,
-      onError: (_) {},
+      onError: (e, _) {
+        if (_disposed || gen != _attachGeneration) return;
+        if (_ref.read(authViewModelProvider).user?.uid != uid) return;
+        state = state.copyWith(
+          toastMessage: AuthErrorMapper.mapForBadge(e),
+        );
+      },
     );
   }
 
   Future<void> _onBadgesSnapshot(Map<String, Badge> map) async {
     final shown = await _shownStore.getShownBadgeKeys();
+    if (_disposed) return;
+
     final newQueueKeys = <String>[];
 
     for (final key in map.keys) {
@@ -57,6 +89,8 @@ class BadgeViewModel extends StateNotifier<BadgeState> {
         }
       }
     }
+
+    if (_disposed) return;
 
     state = state.copyWith(
       badges: map,
@@ -75,8 +109,13 @@ class BadgeViewModel extends StateNotifier<BadgeState> {
     );
   }
 
+  void clearToast() {
+    state = state.copyWith(toastMessage: null);
+  }
+
   @override
   void dispose() {
+    _disposed = true;
     _subscription?.cancel();
     super.dispose();
   }

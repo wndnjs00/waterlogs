@@ -56,6 +56,14 @@ abstract class AuthErrorMapper {
     return '알림 처리 중 오류가 발생했습니다';
   }
 
+  /// 뱃지(Firestore 구독) 관련 오류 시 사용
+  static String mapForBadge(Object e) {
+    if (_isNetworkError(e)) return '네트워크 연결 상태가 좋지 않습니다';
+    if (_isTimeout(e)) return '서버 지연';
+    if (_isFirestoreException(e)) return '뱃지를 불러오지 못했습니다';
+    return '뱃지 처리 중 오류가 발생했습니다';
+  }
+
   /// OAuth(Google/Kakao/Naver) 로그인 실패 시 사용
   static String mapForOAuth(Object e) {
     if (_isNetworkError(e)) return '네트워크 연결 상태가 좋지 않습니다';
