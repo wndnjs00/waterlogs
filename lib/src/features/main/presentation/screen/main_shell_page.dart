@@ -8,7 +8,6 @@ import '../../../account/domain/model/user_info.dart';
 import '../../../account/presentation/viewmodel/auth_provider.dart';
 import '../../../account/presentation/viewmodel/state/auth_view_state.dart';
 import '../../../notification/presentation/di/notification_providers.dart';
-import '../widgets/dialog/badge_info_dialog.dart';
 import '../widgets/dialog/signout_dialog.dart';
 
 class MainShellPage extends ConsumerWidget {
@@ -76,7 +75,7 @@ class MainShellPage extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: GestureDetector(
-              onTap: () => showBadgeInfoDialog(context),
+              onTap: () => context.push(AppRoutes.badge),
               child: const Image(
                 image: AssetImage(AssetPath.badgeIcon),
                 width: 24,
