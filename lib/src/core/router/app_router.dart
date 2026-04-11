@@ -4,7 +4,7 @@ import 'package:waterlogs/src/core/router/app_routes.dart';
 
 import '../../features/main/presentation/screen/main_shell_page.dart';
 import '../../features/main/presentation/screen/main_screen.dart';
-import '../../features/main/presentation/screen/ai_helper_screen.dart';
+import '../../features/ai/presentation/screen/ai_chat_screen.dart';
 import '../../features/badge/presentation/screen/badge_screen.dart';
 import '../../features/notification/presentation/screen/notification_screen.dart';
 import '../../features/account/presentation/screen/login_screen.dart';
@@ -55,7 +55,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: AppRoutes.aiHelper,
             name: AppRoutes.aiName,
             pageBuilder: (context, state) => const NoTransitionPage(
-              child: AiHelperScreen(),
+              child: AiChatScreen(),
             ),
           ),
         ],

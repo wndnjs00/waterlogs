@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-/*import 'ai_helper_screen.dart';*/
 import '../../../../core/router/app_routes.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/util/asset_path.dart';
 import '../../../account/domain/model/user_info.dart';
 import '../../../account/presentation/viewmodel/auth_provider.dart';
@@ -10,31 +10,29 @@ import '../../../account/presentation/viewmodel/state/auth_view_state.dart';
 import '../../../notification/presentation/di/notification_providers.dart';
 import '../widgets/dialog/signout_dialog.dart';
 
+int _mainShellSelectedIndex(BuildContext context) {
+  final path = GoRouterState.of(context).uri.path;
+  if (path.startsWith(AppRoutes.aiHelper)) {
+    return 1;
+  }
+  return 0;
+}
+
+void _onMainShellTabTapped(BuildContext context, int index) {
+  switch (index) {
+    case 0:
+      context.go(AppRoutes.main);
+      break;
+    case 1:
+      context.go(AppRoutes.aiHelper);
+      break;
+  }
+}
+
 class MainShellPage extends ConsumerWidget {
   const MainShellPage({super.key, required this.child});
 
   final Widget child;
-
-  /* bottomNavigationBar 추가시, 주석 해제 */
-  // int _calculateSelectedIndex(BuildContext context) {
-  //   final location = GoRouterState.of(context).uri.toString();
-  //   if (location.startsWith(AiHelperScreen.routePath)) {
-  //     return 1;
-  //   }
-  //   return 0;
-  // }
-  //
-  // void _onItemTapped(BuildContext context, int index) {
-  //   switch (index) {
-  //     case 0:
-  //       context.go(MainScreen.routePath);
-  //       break;
-  //     case 1:
-  //       context.go(AiHelperScreen.routePath);
-  //       break;
-  //   }
-  // }
-
 
   static Future<void> _onLogoutTap(
     BuildContext context,
@@ -69,6 +67,7 @@ class MainShellPage extends ConsumerWidget {
     });
 
     return Scaffold(
+      backgroundColor: AppColors.screenBackground,
       appBar: AppBar(
         title: const Text('WaterLog'),
         actions: [
@@ -129,22 +128,20 @@ class MainShellPage extends ConsumerWidget {
         ],
       ),
       body: child,
-
-      /* bottomNavigationBar 추가시, 주석 해제 */
-      // bottomNavigationBar: NavigationBar(
-      //   selectedIndex: _calculateSelectedIndex(context),
-      //   onDestinationSelected: (index) => _onItemTapped(context, index),
-      //   destinations: const [
-      //     NavigationDestination(
-      //       icon: Icon(Icons.home),
-      //       label: '물마시기',
-      //     ),
-      //     NavigationDestination(
-      //       icon: Icon(Icons.star),
-      //       label: 'Ai도우미',
-      //     ),
-      //   ],
-      // ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _mainShellSelectedIndex(context),
+        onDestinationSelected: (index) => _onMainShellTabTapped(context, index),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.water_drop_outlined),
+            label: '물마시기',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.chat_bubble_outline),
+            label: 'Ai 도우미',
+          ),
+        ],
+      ),
     );
   }
 }

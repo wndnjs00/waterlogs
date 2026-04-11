@@ -28,6 +28,7 @@ class NotificationScreen extends ConsumerWidget {
     final viewModel = ref.read(notificationViewModelProvider.notifier);
 
     return Scaffold(
+      backgroundColor: AppColors.screenBackground,
       appBar: AppBar(
         title: const Text('알림'),
         leading: IconButton(
@@ -37,24 +38,21 @@ class NotificationScreen extends ConsumerWidget {
         backgroundColor: AppColors.mainBlue,
         foregroundColor: Colors.white,
       ),
-      body: Container(
-        color: Theme.of(context).colorScheme.surface,
-        child: ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          itemCount: state.notifications.length,
-          itemBuilder: (context, index) {
-            final item = state.notifications[index];
-            return _NotificationItem(
-              item: item,
-              time: viewModel.formatTime(item.createdAt),
-              onTap: () {
-                if (!item.isRead) {
-                  viewModel.markAsRead(item.id);
-                }
-              },
-            );
-          },
-        ),
+      body: ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        itemCount: state.notifications.length,
+        itemBuilder: (context, index) {
+          final item = state.notifications[index];
+          return _NotificationItem(
+            item: item,
+            time: viewModel.formatTime(item.createdAt),
+            onTap: () {
+              if (!item.isRead) {
+                viewModel.markAsRead(item.id);
+              }
+            },
+          );
+        },
       ),
     );
   }

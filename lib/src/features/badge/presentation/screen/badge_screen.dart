@@ -57,6 +57,7 @@ class _BadgeScreenState extends ConsumerState<BadgeScreen> {
     final state = ref.watch(badgeViewModelProvider);
 
     return Scaffold(
+      backgroundColor: AppColors.screenBackground,
       appBar: AppBar(
         title: const Text('물뱃지'),
         leading: IconButton(
