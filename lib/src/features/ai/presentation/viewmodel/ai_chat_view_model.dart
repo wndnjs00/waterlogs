@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:waterlogs/src/core/config/app_config.dart';
 import 'package:waterlogs/src/core/util/auth_error_mapper.dart';
+import 'package:waterlogs/src/features/ai/domain/repository/ai_chat_local_repository.dart';
 import 'package:waterlogs/src/features/ai/domain/repository/chat_limit_store_repository.dart';
 import 'package:waterlogs/src/features/ai/domain/usecase/send_chat_use_case.dart';
 import 'package:waterlogs/src/features/ai/presentation/viewmodel/ai_chat_state.dart';
@@ -9,16 +9,18 @@ import 'package:waterlogs/src/features/ai/presentation/viewmodel/ai_chat_state.d
 class AiChatViewModel extends StateNotifier<AiChatState> {
   final SendChatUseCase _sendChatUseCase;
   final ChatLimitStoreRepository _chatLimitStore;
+  final AiChatLocalRepository _localChat;
 
   AiChatViewModel(
     this._sendChatUseCase,
     this._chatLimitStore,
-  ) : super(const AiChatState()) {
-    Future.microtask(_refreshCount);
-  }
+    this._localChat,
+  ) : super(const AiChatState());
 
-  Future<void> _refreshCount() async {
-    state = state.copyWith(count: await _chatLimitStore.getCount());
+  Future<void> refreshFromStorage() async {
+    final count = await _chatLimitStore.getCount();
+    final messages = await _localChat.loadMessages();
+    state = state.copyWith(count: count, messages: messages);
   }
 
   String _todayString() {
@@ -34,16 +36,20 @@ class AiChatViewModel extends StateNotifier<AiChatState> {
     if (trimmed.isEmpty) return;
     if (state.count >= 3) return;
 
+    final userMsg = (isUser: true, text: trimmed);
     state = state.copyWith(
-      messages: [...state.messages, (isUser: true, text: trimmed)],
+      messages: [...state.messages, userMsg],
       isLoading: true,
     );
+    await _localChat.appendMessage(userMsg);
 
     try {
       final answer = await _sendChatUseCase(trimmed);
+      final botMsg = (isUser: false, text: answer);
       state = state.copyWith(
-        messages: [...state.messages, (isUser: false, text: answer)],
+        messages: [...state.messages, botMsg],
       );
+      await _localChat.appendMessage(botMsg);
       await _chatLimitStore.increase(_todayString());
       state = state.copyWith(count: await _chatLimitStore.getCount());
     } catch (e) {

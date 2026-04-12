@@ -32,7 +32,7 @@ dependencies:
   # Navigation
   go_router: ^14.2.7
 
-  # Local prefs (획득 뱃지 다이얼로그 표시 여부)
+  # Local prefs (획득 뱃지 다이얼로그 표시 여부, AI 채팅)
   shared_preferences: ^2.3.3
 
   # HTTP client

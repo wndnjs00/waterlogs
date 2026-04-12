@@ -1,4 +1,6 @@
-typedef AiChatMessage = ({bool isUser, String text});
+import 'package:waterlogs/src/features/ai/domain/model/ai_chat_message.dart';
+
+export 'package:waterlogs/src/features/ai/domain/model/ai_chat_message.dart';
 
 const _toastSentinel = Object();
 

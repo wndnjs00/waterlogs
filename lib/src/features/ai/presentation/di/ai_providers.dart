@@ -2,8 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:waterlogs/src/core/config/app_config.dart';
+import 'package:waterlogs/src/features/ai/data/repository/ai_chat_local_repository_impl.dart';
 import 'package:waterlogs/src/features/ai/data/repository/chat_limit_store_repository_impl.dart';
 import 'package:waterlogs/src/features/ai/data/repository/chat_repository_impl.dart';
+import 'package:waterlogs/src/features/ai/domain/repository/ai_chat_local_repository.dart';
 import 'package:waterlogs/src/features/ai/domain/repository/chat_limit_store_repository.dart';
 import 'package:waterlogs/src/features/ai/domain/repository/chat_repository.dart';
 import 'package:waterlogs/src/features/ai/domain/usecase/send_chat_use_case.dart';
@@ -33,6 +35,10 @@ final chatLimitStoreProvider = Provider<ChatLimitStoreRepository>((ref) {
   return ChatLimitStoreRepositoryImpl();
 });
 
+final aiChatLocalRepositoryProvider = Provider<AiChatLocalRepository>((ref) {
+  return AiChatLocalRepositoryImpl();
+});
+
 final chatRepositoryProvider = Provider<ChatRepository>((ref) {
   final dio = ref.watch(openAiDioProvider);
   return ChatRepositoryImpl(dio);
@@ -48,5 +54,6 @@ final aiChatViewModelProvider =
   return AiChatViewModel(
     ref.watch(sendChatUseCaseProvider),
     ref.watch(chatLimitStoreProvider),
+    ref.watch(aiChatLocalRepositoryProvider),
   );
 });

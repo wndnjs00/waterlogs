@@ -12,7 +12,8 @@ class AiChatScreen extends ConsumerStatefulWidget {
   ConsumerState<AiChatScreen> createState() => _AiChatScreenState();
 }
 
-class _AiChatScreenState extends ConsumerState<AiChatScreen> {
+class _AiChatScreenState extends ConsumerState<AiChatScreen>
+    with WidgetsBindingObserver {
   final _scrollController = ScrollController();
   final _inputController = TextEditingController();
 
@@ -27,10 +28,28 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(aiChatViewModelProvider.notifier).refreshFromStorage();
+    });
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _scrollController.dispose();
     _inputController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState lifecycleState) {
+    if (lifecycleState == AppLifecycleState.resumed && mounted) {
+      ref.read(aiChatViewModelProvider.notifier).refreshFromStorage();
+    }
   }
 
   void _scrollTowardEnd(AiChatState state) {
