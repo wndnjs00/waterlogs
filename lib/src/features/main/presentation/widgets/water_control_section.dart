@@ -5,12 +5,18 @@ class WaterControlSection extends StatelessWidget {
   final int cups;
   final VoidCallback onAdd;
   final VoidCallback onRemove;
+  final bool hasUnsavedChanges;
+  final bool isSaving;
+  final VoidCallback onSave;
 
   const WaterControlSection({
     super.key,
     required this.cups,
     required this.onAdd,
     required this.onRemove,
+    required this.hasUnsavedChanges,
+    required this.isSaving,
+    required this.onSave,
   });
 
   @override
@@ -90,6 +96,42 @@ class WaterControlSection extends StatelessWidget {
           Text(
             '한 잔 = 250ml 기준',
             style: TextStyle(fontSize: 14, color: Colors.grey.shade800),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Center(
+              child: SizedBox(
+                width: 140,
+                child: FilledButton(
+                  onPressed: (hasUnsavedChanges && !isSaving) ? onSave : null,
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    backgroundColor: AppColors.mainBlue,
+                    disabledBackgroundColor: Colors.grey.shade300,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: isSaving
+                      ? const SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          '저장',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

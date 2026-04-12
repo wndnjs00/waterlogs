@@ -13,11 +13,26 @@ class MainScreen extends ConsumerStatefulWidget {
   ConsumerState<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends ConsumerState<MainScreen> {
+class _MainScreenState extends ConsumerState<MainScreen>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadIfUser());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      ref.read(waterViewModelProvider.notifier).saveToCloudIfNeeded();
+    }
   }
 
   void _loadIfUser() {
@@ -70,6 +85,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       streakDays: user.streakDays ?? 0,
       onAdd: () => ref.read(waterViewModelProvider.notifier).addCup(),
       onRemove: () => ref.read(waterViewModelProvider.notifier).removeCup(),
+      hasUnsavedChanges: waterState.hasUnsavedChanges,
+      isSaving: waterState.isUpdating,
+      onSave: () => ref.read(waterViewModelProvider.notifier).saveToCloud(),
       weeklyLogs: waterState.weeklyLogs,
       monthlyLogs: waterState.monthlyLogs,
       dailyGoal: user.dailyGoal,

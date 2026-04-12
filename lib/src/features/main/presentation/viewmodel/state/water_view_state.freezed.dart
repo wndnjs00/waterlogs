@@ -19,6 +19,9 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$WaterViewState {
   WaterLog? get todayLog => throw _privateConstructorUsedError;
   bool get isUpdating => throw _privateConstructorUsedError;
+
+  /// Firestore에 반영되지 않은 로컬 변경이 있음 (+/- 후 저장 전)
+  bool get hasUnsavedChanges => throw _privateConstructorUsedError;
   List<WaterLog> get weeklyLogs => throw _privateConstructorUsedError;
   List<WaterLog> get monthlyLogs => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
@@ -40,6 +43,7 @@ abstract class $WaterViewStateCopyWith<$Res> {
   $Res call({
     WaterLog? todayLog,
     bool isUpdating,
+    bool hasUnsavedChanges,
     List<WaterLog> weeklyLogs,
     List<WaterLog> monthlyLogs,
     String? errorMessage,
@@ -65,6 +69,7 @@ class _$WaterViewStateCopyWithImpl<$Res, $Val extends WaterViewState>
   $Res call({
     Object? todayLog = freezed,
     Object? isUpdating = null,
+    Object? hasUnsavedChanges = null,
     Object? weeklyLogs = null,
     Object? monthlyLogs = null,
     Object? errorMessage = freezed,
@@ -78,6 +83,10 @@ class _$WaterViewStateCopyWithImpl<$Res, $Val extends WaterViewState>
             isUpdating: null == isUpdating
                 ? _value.isUpdating
                 : isUpdating // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            hasUnsavedChanges: null == hasUnsavedChanges
+                ? _value.hasUnsavedChanges
+                : hasUnsavedChanges // ignore: cast_nullable_to_non_nullable
                       as bool,
             weeklyLogs: null == weeklyLogs
                 ? _value.weeklyLogs
@@ -123,6 +132,7 @@ abstract class _$$WaterViewStateImplCopyWith<$Res>
   $Res call({
     WaterLog? todayLog,
     bool isUpdating,
+    bool hasUnsavedChanges,
     List<WaterLog> weeklyLogs,
     List<WaterLog> monthlyLogs,
     String? errorMessage,
@@ -148,6 +158,7 @@ class __$$WaterViewStateImplCopyWithImpl<$Res>
   $Res call({
     Object? todayLog = freezed,
     Object? isUpdating = null,
+    Object? hasUnsavedChanges = null,
     Object? weeklyLogs = null,
     Object? monthlyLogs = null,
     Object? errorMessage = freezed,
@@ -161,6 +172,10 @@ class __$$WaterViewStateImplCopyWithImpl<$Res>
         isUpdating: null == isUpdating
             ? _value.isUpdating
             : isUpdating // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        hasUnsavedChanges: null == hasUnsavedChanges
+            ? _value.hasUnsavedChanges
+            : hasUnsavedChanges // ignore: cast_nullable_to_non_nullable
                   as bool,
         weeklyLogs: null == weeklyLogs
             ? _value._weeklyLogs
@@ -185,6 +200,7 @@ class _$WaterViewStateImpl extends _WaterViewState {
   const _$WaterViewStateImpl({
     this.todayLog,
     this.isUpdating = false,
+    this.hasUnsavedChanges = false,
     final List<WaterLog> weeklyLogs = const [],
     final List<WaterLog> monthlyLogs = const [],
     this.errorMessage,
@@ -197,6 +213,11 @@ class _$WaterViewStateImpl extends _WaterViewState {
   @override
   @JsonKey()
   final bool isUpdating;
+
+  /// Firestore에 반영되지 않은 로컬 변경이 있음 (+/- 후 저장 전)
+  @override
+  @JsonKey()
+  final bool hasUnsavedChanges;
   final List<WaterLog> _weeklyLogs;
   @override
   @JsonKey()
@@ -220,7 +241,7 @@ class _$WaterViewStateImpl extends _WaterViewState {
 
   @override
   String toString() {
-    return 'WaterViewState(todayLog: $todayLog, isUpdating: $isUpdating, weeklyLogs: $weeklyLogs, monthlyLogs: $monthlyLogs, errorMessage: $errorMessage)';
+    return 'WaterViewState(todayLog: $todayLog, isUpdating: $isUpdating, hasUnsavedChanges: $hasUnsavedChanges, weeklyLogs: $weeklyLogs, monthlyLogs: $monthlyLogs, errorMessage: $errorMessage)';
   }
 
   @override
@@ -232,6 +253,8 @@ class _$WaterViewStateImpl extends _WaterViewState {
                 other.todayLog == todayLog) &&
             (identical(other.isUpdating, isUpdating) ||
                 other.isUpdating == isUpdating) &&
+            (identical(other.hasUnsavedChanges, hasUnsavedChanges) ||
+                other.hasUnsavedChanges == hasUnsavedChanges) &&
             const DeepCollectionEquality().equals(
               other._weeklyLogs,
               _weeklyLogs,
@@ -249,6 +272,7 @@ class _$WaterViewStateImpl extends _WaterViewState {
     runtimeType,
     todayLog,
     isUpdating,
+    hasUnsavedChanges,
     const DeepCollectionEquality().hash(_weeklyLogs),
     const DeepCollectionEquality().hash(_monthlyLogs),
     errorMessage,
@@ -270,6 +294,7 @@ abstract class _WaterViewState extends WaterViewState {
   const factory _WaterViewState({
     final WaterLog? todayLog,
     final bool isUpdating,
+    final bool hasUnsavedChanges,
     final List<WaterLog> weeklyLogs,
     final List<WaterLog> monthlyLogs,
     final String? errorMessage,
@@ -280,6 +305,10 @@ abstract class _WaterViewState extends WaterViewState {
   WaterLog? get todayLog;
   @override
   bool get isUpdating;
+
+  /// Firestore에 반영되지 않은 로컬 변경이 있음 (+/- 후 저장 전)
+  @override
+  bool get hasUnsavedChanges;
   @override
   List<WaterLog> get weeklyLogs;
   @override

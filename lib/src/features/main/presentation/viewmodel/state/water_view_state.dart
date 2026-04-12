@@ -8,6 +8,8 @@ class WaterViewState with _$WaterViewState {
   const factory WaterViewState({
     WaterLog? todayLog,
     @Default(false) bool isUpdating,
+    /// Firestore에 반영되지 않은 로컬 변경이 있음 (+/- 후 저장 전)
+    @Default(false) bool hasUnsavedChanges,
     @Default([]) List<WaterLog> weeklyLogs,
     @Default([]) List<WaterLog> monthlyLogs,
     String? errorMessage,

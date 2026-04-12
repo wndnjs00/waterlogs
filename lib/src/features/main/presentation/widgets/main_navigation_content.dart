@@ -11,6 +11,9 @@ class MainNavigationContent extends StatefulWidget {
   final int streakDays;
   final VoidCallback onAdd;
   final VoidCallback onRemove;
+  final bool hasUnsavedChanges;
+  final bool isSaving;
+  final VoidCallback onSave;
   final List<WaterLog> weeklyLogs;
   final List<WaterLog> monthlyLogs;
   final int? dailyGoal;
@@ -21,6 +24,9 @@ class MainNavigationContent extends StatefulWidget {
     required this.streakDays,
     required this.onAdd,
     required this.onRemove,
+    required this.hasUnsavedChanges,
+    required this.isSaving,
+    required this.onSave,
     required this.weeklyLogs,
     required this.monthlyLogs,
     this.dailyGoal,
@@ -50,6 +56,9 @@ class _MainNavigationContentState extends State<MainNavigationContent> {
             cups: widget.log.cups,
             onAdd: widget.onAdd,
             onRemove: widget.onRemove,
+            hasUnsavedChanges: widget.hasUnsavedChanges,
+            isSaving: widget.isSaving,
+            onSave: widget.onSave,
           ),
           const SizedBox(height: 24),
           Container(

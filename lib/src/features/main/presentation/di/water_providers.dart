@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waterlogs/src/features/account/presentation/di/account_providers.dart';
 import 'package:waterlogs/src/features/main/data/datasource/water_remote_datasource.dart';
+import 'package:waterlogs/src/features/main/data/repository/water_local_draft_repository_impl.dart';
 import 'package:waterlogs/src/features/main/data/repository/water_repository_impl.dart';
+import 'package:waterlogs/src/features/main/domain/repository/water_local_draft_repository.dart';
 import 'package:waterlogs/src/features/main/domain/repository/water_repository.dart';
 import 'package:waterlogs/src/features/main/domain/usecase/water_usecase.dart';
 import 'package:waterlogs/src/features/main/presentation/viewmodel/water_view_model.dart';
@@ -23,9 +25,14 @@ final waterUseCaseProvider = Provider<WaterUseCase>((ref) {
   return WaterUseCase(repository);
 });
 
+final waterLocalDraftRepositoryProvider = Provider<WaterLocalDraftRepository>(
+  (ref) => WaterLocalDraftRepositoryImpl(),
+);
+
 final waterViewModelProvider =
     StateNotifierProvider<WaterViewModel, WaterViewState>((ref) {
   final useCase = ref.watch(waterUseCaseProvider);
   final timeProvider = ref.watch(timeProviderProvider);
-  return WaterViewModel(useCase, timeProvider);
+  final draftRepo = ref.watch(waterLocalDraftRepositoryProvider);
+  return WaterViewModel(useCase, timeProvider, draftRepo);
 });
