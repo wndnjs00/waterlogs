@@ -50,6 +50,7 @@ dependencies:
 
   # Local notifications (foreground 푸시 배너용)
   flutter_local_notifications: ^17.2.2
+  google_mobile_ads: ^7.0.0
 
 dev_dependencies:
   flutter_test:

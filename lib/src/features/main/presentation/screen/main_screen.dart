@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/auth_provider.dart';
 import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth_view_state.dart';
+import 'package:waterlogs/src/core/ads/admob_banner.dart';
 import 'package:waterlogs/src/features/main/presentation/di/water_providers.dart';
 import 'package:waterlogs/src/features/main/presentation/viewmodel/state/water_view_state.dart';
 import 'package:waterlogs/src/features/main/presentation/widgets/main_navigation_content.dart';
@@ -80,17 +81,27 @@ class _MainScreenState extends ConsumerState<MainScreen>
       );
     }
 
-    return MainNavigationContent(
-      log: todayLog,
-      streakDays: user.streakDays ?? 0,
-      onAdd: () => ref.read(waterViewModelProvider.notifier).addCup(),
-      onRemove: () => ref.read(waterViewModelProvider.notifier).removeCup(),
-      hasUnsavedChanges: waterState.hasUnsavedChanges,
-      isSaving: waterState.isUpdating,
-      onSave: () => ref.read(waterViewModelProvider.notifier).saveToCloud(),
-      weeklyLogs: waterState.weeklyLogs,
-      monthlyLogs: waterState.monthlyLogs,
-      dailyGoal: user.dailyGoal,
+    return Column(
+      children: [
+        Expanded(
+          child: MainNavigationContent(
+            log: todayLog,
+            streakDays: user.streakDays ?? 0,
+            onAdd: () => ref.read(waterViewModelProvider.notifier).addCup(),
+            onRemove: () => ref.read(waterViewModelProvider.notifier).removeCup(),
+            hasUnsavedChanges: waterState.hasUnsavedChanges,
+            isSaving: waterState.isUpdating,
+            onSave: () => ref.read(waterViewModelProvider.notifier).saveToCloud(),
+            weeklyLogs: waterState.weeklyLogs,
+            monthlyLogs: waterState.monthlyLogs,
+            dailyGoal: user.dailyGoal,
+          ),
+        ),
+        const SafeArea(
+          top: false,
+          child: AdmobBanner(),
+        ),
+      ],
     );
   }
 }

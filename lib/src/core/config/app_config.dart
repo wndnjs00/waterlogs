@@ -26,4 +26,16 @@ class AppConfig {
     return v;
   }
 
+  static String? get admobBannerAndroid {
+    final v = dotenv.env['ADMOB_BANNER_ANDROID']?.trim();
+    if (v == null || v.isEmpty) return null;
+    return v;
+  }
+
+  static String? get admobBannerIos {
+    final v = dotenv.env['ADMOB_BANNER_IOS']?.trim();
+    if (v == null || v.isEmpty) return null;
+    return v;
+  }
+
 }
