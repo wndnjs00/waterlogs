@@ -192,12 +192,25 @@ class _AiProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipOval(
       child: SizedBox(
-        width: 32,
-        height: 32,
+        width: 36,
+        height: 36,
         child: Image.asset(
           AssetPath.aiWitiIcon,
           fit: BoxFit.cover,
+          alignment: const Alignment(-0.15, 0),
           gaplessPlayback: true,
+          errorBuilder: (context, _, __) {
+            return const ColoredBox(
+              color: Color(0xFFE3F2FD),
+              child: Center(
+                child: Icon(
+                  Icons.smart_toy_outlined,
+                  size: 18,
+                  color: Color(0xFF1976D2),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

@@ -12,5 +12,5 @@ class AssetPath {
   static const googleLoginIcon = "assets/ic_google_logo.png";
 
   // ai_witi
-  static const aiWitiIcon = "assets/ai_helper_img.jpg";
+  static const aiWitiIcon = "assets/ai_helper_img.png";
 }
