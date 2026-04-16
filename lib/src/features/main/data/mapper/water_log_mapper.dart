@@ -3,11 +3,16 @@ import '../model/water_log_dto.dart';
 
 class WaterLogMapper {
   static WaterLog toDomain(WaterLogDto dto) {
+    final beverages = dto.beverages ?? const <String, int>{};
+    final totalMl = dto.totalMl ?? beverages.values.fold<int>(0, (s, v) => s + v);
+    final cups = dto.cups ?? ((beverages['water'] ?? 0) ~/ 250);
+
     return WaterLog(
       date: dto.date,
-      cups: dto.cups ?? 0,
+      cups: cups,
       targetCups: dto.targetCups ?? 8,
-      totalMl: dto.totalMl ?? 0,
+      totalMl: totalMl,
+      beverages: beverages,
       updatedAt: dto.updatedAt ?? '',
     );
   }
@@ -18,6 +23,7 @@ class WaterLogMapper {
       cups: domain.cups,
       targetCups: domain.targetCups,
       totalMl: domain.totalMl,
+      beverages: domain.beverages.isEmpty ? null : domain.beverages,
       updatedAt: domain.updatedAt,
     );
   }

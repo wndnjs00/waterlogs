@@ -18,9 +18,16 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$WaterLog {
   String get date => throw _privateConstructorUsedError;
+
+  /// 물 섭취량을 250ml 단위(잔)로 환산한 값. (뱃지/알림/목표는 물만 기준)
   int get cups => throw _privateConstructorUsedError;
   int get targetCups => throw _privateConstructorUsedError;
+
+  /// 모든 음료 합계(ml)
   int get totalMl => throw _privateConstructorUsedError;
+
+  /// 날짜별 음료별 섭취량(ml). key는 BeverageType.id(=enum name)
+  Map<String, int> get beverages => throw _privateConstructorUsedError;
   String get updatedAt => throw _privateConstructorUsedError;
 
   /// Create a copy of WaterLog
@@ -40,6 +47,7 @@ abstract class $WaterLogCopyWith<$Res> {
     int cups,
     int targetCups,
     int totalMl,
+    Map<String, int> beverages,
     String updatedAt,
   });
 }
@@ -63,6 +71,7 @@ class _$WaterLogCopyWithImpl<$Res, $Val extends WaterLog>
     Object? cups = null,
     Object? targetCups = null,
     Object? totalMl = null,
+    Object? beverages = null,
     Object? updatedAt = null,
   }) {
     return _then(
@@ -83,6 +92,10 @@ class _$WaterLogCopyWithImpl<$Res, $Val extends WaterLog>
                 ? _value.totalMl
                 : totalMl // ignore: cast_nullable_to_non_nullable
                       as int,
+            beverages: null == beverages
+                ? _value.beverages
+                : beverages // ignore: cast_nullable_to_non_nullable
+                      as Map<String, int>,
             updatedAt: null == updatedAt
                 ? _value.updatedAt
                 : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -107,6 +120,7 @@ abstract class _$$WaterLogImplCopyWith<$Res>
     int cups,
     int targetCups,
     int totalMl,
+    Map<String, int> beverages,
     String updatedAt,
   });
 }
@@ -129,6 +143,7 @@ class __$$WaterLogImplCopyWithImpl<$Res>
     Object? cups = null,
     Object? targetCups = null,
     Object? totalMl = null,
+    Object? beverages = null,
     Object? updatedAt = null,
   }) {
     return _then(
@@ -149,6 +164,10 @@ class __$$WaterLogImplCopyWithImpl<$Res>
             ? _value.totalMl
             : totalMl // ignore: cast_nullable_to_non_nullable
                   as int,
+        beverages: null == beverages
+            ? _value._beverages
+            : beverages // ignore: cast_nullable_to_non_nullable
+                  as Map<String, int>,
         updatedAt: null == updatedAt
             ? _value.updatedAt
             : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -166,24 +185,42 @@ class _$WaterLogImpl implements _WaterLog {
     required this.cups,
     this.targetCups = 8,
     required this.totalMl,
+    final Map<String, int> beverages = const {},
     required this.updatedAt,
-  });
+  }) : _beverages = beverages;
 
   @override
   final String date;
+
+  /// 물 섭취량을 250ml 단위(잔)로 환산한 값. (뱃지/알림/목표는 물만 기준)
   @override
   final int cups;
   @override
   @JsonKey()
   final int targetCups;
+
+  /// 모든 음료 합계(ml)
   @override
   final int totalMl;
+
+  /// 날짜별 음료별 섭취량(ml). key는 BeverageType.id(=enum name)
+  final Map<String, int> _beverages;
+
+  /// 날짜별 음료별 섭취량(ml). key는 BeverageType.id(=enum name)
+  @override
+  @JsonKey()
+  Map<String, int> get beverages {
+    if (_beverages is EqualUnmodifiableMapView) return _beverages;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_beverages);
+  }
+
   @override
   final String updatedAt;
 
   @override
   String toString() {
-    return 'WaterLog(date: $date, cups: $cups, targetCups: $targetCups, totalMl: $totalMl, updatedAt: $updatedAt)';
+    return 'WaterLog(date: $date, cups: $cups, targetCups: $targetCups, totalMl: $totalMl, beverages: $beverages, updatedAt: $updatedAt)';
   }
 
   @override
@@ -196,13 +233,24 @@ class _$WaterLogImpl implements _WaterLog {
             (identical(other.targetCups, targetCups) ||
                 other.targetCups == targetCups) &&
             (identical(other.totalMl, totalMl) || other.totalMl == totalMl) &&
+            const DeepCollectionEquality().equals(
+              other._beverages,
+              _beverages,
+            ) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, date, cups, targetCups, totalMl, updatedAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    date,
+    cups,
+    targetCups,
+    totalMl,
+    const DeepCollectionEquality().hash(_beverages),
+    updatedAt,
+  );
 
   /// Create a copy of WaterLog
   /// with the given fields replaced by the non-null parameter values.
@@ -219,17 +267,26 @@ abstract class _WaterLog implements WaterLog {
     required final int cups,
     final int targetCups,
     required final int totalMl,
+    final Map<String, int> beverages,
     required final String updatedAt,
   }) = _$WaterLogImpl;
 
   @override
   String get date;
+
+  /// 물 섭취량을 250ml 단위(잔)로 환산한 값. (뱃지/알림/목표는 물만 기준)
   @override
   int get cups;
   @override
   int get targetCups;
+
+  /// 모든 음료 합계(ml)
   @override
   int get totalMl;
+
+  /// 날짜별 음료별 섭취량(ml). key는 BeverageType.id(=enum name)
+  @override
+  Map<String, int> get beverages;
   @override
   String get updatedAt;
 

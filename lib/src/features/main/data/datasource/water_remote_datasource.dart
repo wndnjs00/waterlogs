@@ -160,7 +160,7 @@ class WaterRemoteDataSource {
         .get();
 
     return snapshot.docs.map((doc) {
-      return WaterLogDto.fromJson({'date': doc.id, ...?doc.data()});
+      return WaterLogDto.fromJson({'date': doc.id, ...doc.data()});
     }).toList();
   }
 }

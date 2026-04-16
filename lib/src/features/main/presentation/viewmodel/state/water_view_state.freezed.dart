@@ -24,6 +24,10 @@ mixin _$WaterViewState {
   bool get hasUnsavedChanges => throw _privateConstructorUsedError;
   List<WaterLog> get weeklyLogs => throw _privateConstructorUsedError;
   List<WaterLog> get monthlyLogs => throw _privateConstructorUsedError;
+  BeverageType get selectedBeverage => throw _privateConstructorUsedError;
+
+  /// 현재 선택된 음료의 "한 잔" 용량(ml). 가운데 박스는 이 값을 고정 표시.
+  int get servingMl => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
   /// Create a copy of WaterViewState
@@ -46,6 +50,8 @@ abstract class $WaterViewStateCopyWith<$Res> {
     bool hasUnsavedChanges,
     List<WaterLog> weeklyLogs,
     List<WaterLog> monthlyLogs,
+    BeverageType selectedBeverage,
+    int servingMl,
     String? errorMessage,
   });
 
@@ -72,6 +78,8 @@ class _$WaterViewStateCopyWithImpl<$Res, $Val extends WaterViewState>
     Object? hasUnsavedChanges = null,
     Object? weeklyLogs = null,
     Object? monthlyLogs = null,
+    Object? selectedBeverage = null,
+    Object? servingMl = null,
     Object? errorMessage = freezed,
   }) {
     return _then(
@@ -96,6 +104,14 @@ class _$WaterViewStateCopyWithImpl<$Res, $Val extends WaterViewState>
                 ? _value.monthlyLogs
                 : monthlyLogs // ignore: cast_nullable_to_non_nullable
                       as List<WaterLog>,
+            selectedBeverage: null == selectedBeverage
+                ? _value.selectedBeverage
+                : selectedBeverage // ignore: cast_nullable_to_non_nullable
+                      as BeverageType,
+            servingMl: null == servingMl
+                ? _value.servingMl
+                : servingMl // ignore: cast_nullable_to_non_nullable
+                      as int,
             errorMessage: freezed == errorMessage
                 ? _value.errorMessage
                 : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -135,6 +151,8 @@ abstract class _$$WaterViewStateImplCopyWith<$Res>
     bool hasUnsavedChanges,
     List<WaterLog> weeklyLogs,
     List<WaterLog> monthlyLogs,
+    BeverageType selectedBeverage,
+    int servingMl,
     String? errorMessage,
   });
 
@@ -161,6 +179,8 @@ class __$$WaterViewStateImplCopyWithImpl<$Res>
     Object? hasUnsavedChanges = null,
     Object? weeklyLogs = null,
     Object? monthlyLogs = null,
+    Object? selectedBeverage = null,
+    Object? servingMl = null,
     Object? errorMessage = freezed,
   }) {
     return _then(
@@ -185,6 +205,14 @@ class __$$WaterViewStateImplCopyWithImpl<$Res>
             ? _value._monthlyLogs
             : monthlyLogs // ignore: cast_nullable_to_non_nullable
                   as List<WaterLog>,
+        selectedBeverage: null == selectedBeverage
+            ? _value.selectedBeverage
+            : selectedBeverage // ignore: cast_nullable_to_non_nullable
+                  as BeverageType,
+        servingMl: null == servingMl
+            ? _value.servingMl
+            : servingMl // ignore: cast_nullable_to_non_nullable
+                  as int,
         errorMessage: freezed == errorMessage
             ? _value.errorMessage
             : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -203,6 +231,8 @@ class _$WaterViewStateImpl extends _WaterViewState {
     this.hasUnsavedChanges = false,
     final List<WaterLog> weeklyLogs = const [],
     final List<WaterLog> monthlyLogs = const [],
+    this.selectedBeverage = BeverageType.water,
+    this.servingMl = 250,
     this.errorMessage,
   }) : _weeklyLogs = weeklyLogs,
        _monthlyLogs = monthlyLogs,
@@ -237,11 +267,19 @@ class _$WaterViewStateImpl extends _WaterViewState {
   }
 
   @override
+  @JsonKey()
+  final BeverageType selectedBeverage;
+
+  /// 현재 선택된 음료의 "한 잔" 용량(ml). 가운데 박스는 이 값을 고정 표시.
+  @override
+  @JsonKey()
+  final int servingMl;
+  @override
   final String? errorMessage;
 
   @override
   String toString() {
-    return 'WaterViewState(todayLog: $todayLog, isUpdating: $isUpdating, hasUnsavedChanges: $hasUnsavedChanges, weeklyLogs: $weeklyLogs, monthlyLogs: $monthlyLogs, errorMessage: $errorMessage)';
+    return 'WaterViewState(todayLog: $todayLog, isUpdating: $isUpdating, hasUnsavedChanges: $hasUnsavedChanges, weeklyLogs: $weeklyLogs, monthlyLogs: $monthlyLogs, selectedBeverage: $selectedBeverage, servingMl: $servingMl, errorMessage: $errorMessage)';
   }
 
   @override
@@ -263,6 +301,10 @@ class _$WaterViewStateImpl extends _WaterViewState {
               other._monthlyLogs,
               _monthlyLogs,
             ) &&
+            (identical(other.selectedBeverage, selectedBeverage) ||
+                other.selectedBeverage == selectedBeverage) &&
+            (identical(other.servingMl, servingMl) ||
+                other.servingMl == servingMl) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage));
   }
@@ -275,6 +317,8 @@ class _$WaterViewStateImpl extends _WaterViewState {
     hasUnsavedChanges,
     const DeepCollectionEquality().hash(_weeklyLogs),
     const DeepCollectionEquality().hash(_monthlyLogs),
+    selectedBeverage,
+    servingMl,
     errorMessage,
   );
 
@@ -297,6 +341,8 @@ abstract class _WaterViewState extends WaterViewState {
     final bool hasUnsavedChanges,
     final List<WaterLog> weeklyLogs,
     final List<WaterLog> monthlyLogs,
+    final BeverageType selectedBeverage,
+    final int servingMl,
     final String? errorMessage,
   }) = _$WaterViewStateImpl;
   const _WaterViewState._() : super._();
@@ -313,6 +359,12 @@ abstract class _WaterViewState extends WaterViewState {
   List<WaterLog> get weeklyLogs;
   @override
   List<WaterLog> get monthlyLogs;
+  @override
+  BeverageType get selectedBeverage;
+
+  /// 현재 선택된 음료의 "한 잔" 용량(ml). 가운데 박스는 이 값을 고정 표시.
+  @override
+  int get servingMl;
   @override
   String? get errorMessage;
 

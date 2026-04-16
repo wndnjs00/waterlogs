@@ -26,7 +26,7 @@ class WaterLogBaseDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const cancelBorderGray = AppColors.circularProgressGray;
+    final cancelBorderGray = Colors.grey.shade500;
 
     return AlertDialog(
       shape: RoundedRectangleBorder(
@@ -56,7 +56,7 @@ class WaterLogBaseDialog extends StatelessWidget {
                     onPressed: isLoading ? null : onCancel,
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.grey,
-                      side: const BorderSide(color: cancelBorderGray),
+                      side: BorderSide(color: cancelBorderGray),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),

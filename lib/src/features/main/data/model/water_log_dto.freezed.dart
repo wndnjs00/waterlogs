@@ -25,6 +25,7 @@ mixin _$WaterLogDto {
   int? get cups => throw _privateConstructorUsedError;
   int? get targetCups => throw _privateConstructorUsedError;
   int? get totalMl => throw _privateConstructorUsedError;
+  Map<String, int>? get beverages => throw _privateConstructorUsedError;
   String? get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this WaterLogDto to a JSON map.
@@ -49,6 +50,7 @@ abstract class $WaterLogDtoCopyWith<$Res> {
     int? cups,
     int? targetCups,
     int? totalMl,
+    Map<String, int>? beverages,
     String? updatedAt,
   });
 }
@@ -72,6 +74,7 @@ class _$WaterLogDtoCopyWithImpl<$Res, $Val extends WaterLogDto>
     Object? cups = freezed,
     Object? targetCups = freezed,
     Object? totalMl = freezed,
+    Object? beverages = freezed,
     Object? updatedAt = freezed,
   }) {
     return _then(
@@ -92,6 +95,10 @@ class _$WaterLogDtoCopyWithImpl<$Res, $Val extends WaterLogDto>
                 ? _value.totalMl
                 : totalMl // ignore: cast_nullable_to_non_nullable
                       as int?,
+            beverages: freezed == beverages
+                ? _value.beverages
+                : beverages // ignore: cast_nullable_to_non_nullable
+                      as Map<String, int>?,
             updatedAt: freezed == updatedAt
                 ? _value.updatedAt
                 : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -116,6 +123,7 @@ abstract class _$$WaterLogDtoImplCopyWith<$Res>
     int? cups,
     int? targetCups,
     int? totalMl,
+    Map<String, int>? beverages,
     String? updatedAt,
   });
 }
@@ -138,6 +146,7 @@ class __$$WaterLogDtoImplCopyWithImpl<$Res>
     Object? cups = freezed,
     Object? targetCups = freezed,
     Object? totalMl = freezed,
+    Object? beverages = freezed,
     Object? updatedAt = freezed,
   }) {
     return _then(
@@ -158,6 +167,10 @@ class __$$WaterLogDtoImplCopyWithImpl<$Res>
             ? _value.totalMl
             : totalMl // ignore: cast_nullable_to_non_nullable
                   as int?,
+        beverages: freezed == beverages
+            ? _value._beverages
+            : beverages // ignore: cast_nullable_to_non_nullable
+                  as Map<String, int>?,
         updatedAt: freezed == updatedAt
             ? _value.updatedAt
             : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -175,8 +188,9 @@ class _$WaterLogDtoImpl implements _WaterLogDto {
     this.cups,
     this.targetCups = 8,
     this.totalMl,
+    final Map<String, int>? beverages,
     this.updatedAt,
-  });
+  }) : _beverages = beverages;
 
   factory _$WaterLogDtoImpl.fromJson(Map<String, dynamic> json) =>
       _$$WaterLogDtoImplFromJson(json);
@@ -190,12 +204,22 @@ class _$WaterLogDtoImpl implements _WaterLogDto {
   final int? targetCups;
   @override
   final int? totalMl;
+  final Map<String, int>? _beverages;
+  @override
+  Map<String, int>? get beverages {
+    final value = _beverages;
+    if (value == null) return null;
+    if (_beverages is EqualUnmodifiableMapView) return _beverages;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
   @override
   final String? updatedAt;
 
   @override
   String toString() {
-    return 'WaterLogDto(date: $date, cups: $cups, targetCups: $targetCups, totalMl: $totalMl, updatedAt: $updatedAt)';
+    return 'WaterLogDto(date: $date, cups: $cups, targetCups: $targetCups, totalMl: $totalMl, beverages: $beverages, updatedAt: $updatedAt)';
   }
 
   @override
@@ -208,14 +232,25 @@ class _$WaterLogDtoImpl implements _WaterLogDto {
             (identical(other.targetCups, targetCups) ||
                 other.targetCups == targetCups) &&
             (identical(other.totalMl, totalMl) || other.totalMl == totalMl) &&
+            const DeepCollectionEquality().equals(
+              other._beverages,
+              _beverages,
+            ) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, date, cups, targetCups, totalMl, updatedAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    date,
+    cups,
+    targetCups,
+    totalMl,
+    const DeepCollectionEquality().hash(_beverages),
+    updatedAt,
+  );
 
   /// Create a copy of WaterLogDto
   /// with the given fields replaced by the non-null parameter values.
@@ -237,6 +272,7 @@ abstract class _WaterLogDto implements WaterLogDto {
     final int? cups,
     final int? targetCups,
     final int? totalMl,
+    final Map<String, int>? beverages,
     final String? updatedAt,
   }) = _$WaterLogDtoImpl;
 
@@ -251,6 +287,8 @@ abstract class _WaterLogDto implements WaterLogDto {
   int? get targetCups;
   @override
   int? get totalMl;
+  @override
+  Map<String, int>? get beverages;
   @override
   String? get updatedAt;
 

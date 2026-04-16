@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:waterlogs/src/core/theme/app_colors.dart';
 
 class WaterControlSection extends StatelessWidget {
-  final int cups;
+  final String beverageLabel;
+  final int servingMl;
   final VoidCallback onAdd;
   final VoidCallback onRemove;
+  final VoidCallback onOpenDialog;
   final bool hasUnsavedChanges;
   final bool isSaving;
   final VoidCallback onSave;
 
   const WaterControlSection({
     super.key,
-    required this.cups,
+    required this.beverageLabel,
+    required this.servingMl,
     required this.onAdd,
     required this.onRemove,
+    required this.onOpenDialog,
     required this.hasUnsavedChanges,
     required this.isSaving,
     required this.onSave,
@@ -39,8 +43,8 @@ class WaterControlSection extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            '물 한 잔 마셨나요?',
+          Text(
+            '$beverageLabel 한 잔 마셨나요?',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20),
@@ -63,24 +67,36 @@ class WaterControlSection extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   alignment: Alignment.center,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.water_drop_outlined,
-                        size: 28,
-                        color: AppColors.mainBlue.withValues(alpha: 0.8),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '${cups * 250} ml',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: onOpenDialog,
+                      borderRadius: BorderRadius.circular(20),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.water_drop_outlined,
+                              size: 28,
+                              color: AppColors.mainBlue.withValues(alpha: 0.8),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              '$servingMl ml',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
                 _RoundedButton(
@@ -92,9 +108,14 @@ class WaterControlSection extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 13),
           Text(
-            '한 잔 = 250ml 기준',
+            '※ 가운데 박스를 눌러 음료/용량을 선택하세요',
+            style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '한 잔 = ${servingMl}ml 기준',
             style: TextStyle(fontSize: 14, color: Colors.grey.shade800),
           ),
           const SizedBox(height: 16),

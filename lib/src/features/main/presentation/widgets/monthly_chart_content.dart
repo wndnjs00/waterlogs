@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:waterlogs/src/core/theme/app_colors.dart';
+import 'package:waterlogs/src/features/main/domain/model/beverage_type.dart';
 import 'package:waterlogs/src/features/main/domain/model/water_log.dart';
 
 class MonthlyChartContent extends StatelessWidget {
@@ -16,7 +17,7 @@ class MonthlyChartContent extends StatelessWidget {
   static const _weekLabels = ['1주차', '2주차', '3주차', '4주차'];
   static const _maxY = 10.0;
 
-  List<double> _weeklyAverages() {
+  Map<int, List<WaterLog>> _groupByWeek() {
     final grouped = <int, List<WaterLog>>{};
     for (final log in logs) {
       final dt = DateTime.tryParse(log.date);
@@ -35,21 +36,20 @@ class MonthlyChartContent extends StatelessWidget {
         grouped.putIfAbsent(week, () => []).add(log);
       }
     }
-    return List.generate(4, (i) {
-      final weekLogs = grouped[i + 1] ?? [];
-      if (weekLogs.isEmpty) return 0.0;
-      final sum = weekLogs.fold<int>(0, (s, l) => s + l.cups);
-      return (sum / weekLogs.length).clamp(0.0, _maxY);
-    });
+    return grouped;
+  }
+
+  double _avgFor(List<WaterLog> weekLogs, BeverageType type) {
+    if (weekLogs.isEmpty) return 0.0;
+    final sumMl = weekLogs.fold<int>(0, (s, l) => s + (l.beverages[type.id] ?? 0),);
+    final cups = sumMl / 250.0;
+    final avg = cups / weekLogs.length;
+    return avg.clamp(0.0, _maxY);
   }
 
   @override
   Widget build(BuildContext context) {
-    final spots = _weeklyAverages()
-        .asMap()
-        .entries
-        .map((e) => FlSpot(e.key.toDouble(), e.value))
-        .toList();
+    final grouped = _groupByWeek();
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -116,29 +116,35 @@ class MonthlyChartContent extends StatelessWidget {
               ),
               borderData: FlBorderData(show: false),
               lineBarsData: [
-                LineChartBarData(
-                  spots: spots,
-                  isCurved: false,
-                  color: AppColors.mainBlue,
-                  barWidth: 2,
-                  isStrokeCapRound: true,
-                  dotData: FlDotData(
-                    show: true,
-                    getDotPainter: (spot, percent, barData, index) {
-                      return FlDotCirclePainter(
-                        radius: 5,
-                        color: AppColors.mainBlue,
-                        strokeWidth: 1,
-                      );
-                    },
+                for (final t in BeverageType.values)
+                  LineChartBarData(
+                    spots: List.generate(4, (i) {
+                      final weekLogs = grouped[i + 1] ?? const <WaterLog>[];
+                      return FlSpot(i.toDouble(), _avgFor(weekLogs, t));
+                    }),
+                    isCurved: false,
+                    color: t == BeverageType.water ? AppColors.mainBlue : t.color,
+                    barWidth: 2,
+                    isStrokeCapRound: true,
+                    dotData: FlDotData(
+                      show: true,
+                      getDotPainter: (spot, percent, barData, index) {
+                        return FlDotCirclePainter(
+                          radius: 4.5,
+                          color: barData.color ?? t.color,
+                          strokeWidth: 1,
+                        );
+                      },
+                    ),
+                    belowBarData: BarAreaData(show: false),
                   ),
-                  belowBarData: BarAreaData(show: false),
-                ),
               ],
             ),
             duration: const Duration(milliseconds: 300),
           ),
         ),
+        const SizedBox(height: 10),
+        _Legend(),
         Padding(
           padding: const EdgeInsets.all(16),
           child: Text(
@@ -150,6 +156,38 @@ class MonthlyChartContent extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _Legend extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Wrap(
+        spacing: 14,
+        runSpacing: 10,
+        alignment: WrapAlignment.start,
+        children: [
+          for (final t in BeverageType.values)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(color: t.color, shape: BoxShape.circle),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  t.label,
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+                ),
+              ],
+            ),
+        ],
+      ),
     );
   }
 }

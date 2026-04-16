@@ -10,6 +10,7 @@ class WaterLogDto with _$WaterLogDto {
     int? cups,
     @Default(8) int? targetCups,
     int? totalMl,
+    Map<String, int>? beverages,
     String? updatedAt,
   }) = _WaterLogDto;
 

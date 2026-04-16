@@ -11,6 +11,9 @@ class MainNavigationContent extends StatefulWidget {
   final int streakDays;
   final VoidCallback onAdd;
   final VoidCallback onRemove;
+  final VoidCallback onOpenDrinkDialog;
+  final String selectedBeverageLabel;
+  final int servingMl;
   final bool hasUnsavedChanges;
   final bool isSaving;
   final VoidCallback onSave;
@@ -24,6 +27,9 @@ class MainNavigationContent extends StatefulWidget {
     required this.streakDays,
     required this.onAdd,
     required this.onRemove,
+    required this.onOpenDrinkDialog,
+    required this.selectedBeverageLabel,
+    required this.servingMl,
     required this.hasUnsavedChanges,
     required this.isSaving,
     required this.onSave,
@@ -53,9 +59,11 @@ class _MainNavigationContentState extends State<MainNavigationContent> {
           ),
           const SizedBox(height: 24),
           WaterControlSection(
-            cups: widget.log.cups,
+            beverageLabel: widget.selectedBeverageLabel,
+            servingMl: widget.servingMl,
             onAdd: widget.onAdd,
             onRemove: widget.onRemove,
+            onOpenDialog: widget.onOpenDrinkDialog,
             hasUnsavedChanges: widget.hasUnsavedChanges,
             isSaving: widget.isSaving,
             onSave: widget.onSave,
@@ -103,7 +111,7 @@ class _MainNavigationContentState extends State<MainNavigationContent> {
 
   double _monthAvg(List<WaterLog> logs) {
     if (logs.isEmpty) return 0;
-    final sum = logs.fold<int>(0, (s, l) => s + l.cups);
-    return sum / logs.length;
+    final sumCups = logs.fold<double>(0, (s, l) => s + (l.totalMl / 250.0));
+    return sumCups / logs.length;
   }
 }

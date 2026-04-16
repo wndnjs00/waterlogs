@@ -6,6 +6,8 @@ import 'package:waterlogs/src/core/ads/admob_banner.dart';
 import 'package:waterlogs/src/features/main/presentation/di/water_providers.dart';
 import 'package:waterlogs/src/features/main/presentation/viewmodel/state/water_view_state.dart';
 import 'package:waterlogs/src/features/main/presentation/widgets/main_navigation_content.dart';
+import 'package:waterlogs/src/features/main/presentation/widgets/dialog/beverage_intake_dialog.dart';
+import 'package:waterlogs/src/features/main/domain/model/beverage_type.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
@@ -89,6 +91,16 @@ class _MainScreenState extends ConsumerState<MainScreen>
             streakDays: user.streakDays ?? 0,
             onAdd: () => ref.read(waterViewModelProvider.notifier).addCup(),
             onRemove: () => ref.read(waterViewModelProvider.notifier).removeCup(),
+            onOpenDrinkDialog: () async {
+              final result = await BeverageIntakeDialog.show(context);
+              if (!context.mounted) return;
+              if (result == null) return;
+              ref
+                  .read(waterViewModelProvider.notifier)
+                  .selectBeverage(result.type, result.ml);
+            },
+            selectedBeverageLabel: waterState.selectedBeverage.label,
+            servingMl: waterState.servingMl,
             hasUnsavedChanges: waterState.hasUnsavedChanges,
             isSaving: waterState.isUpdating,
             onSave: () => ref.read(waterViewModelProvider.notifier).saveToCloud(),
