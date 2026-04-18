@@ -30,7 +30,8 @@ class WaterRemoteDataSource {
   }
 
   // 트랜잭션으로 물 기록 저장 + 유저/배지/알림 갱신, 계산 로직은 compute에 위임.
-  Future<void> saveWithAchievement({
+  /// 이번 저장에서 "새로 생성된 뱃지 수"를 반환한다.
+  Future<int> saveWithAchievement({
     required String uid,
     required WaterLogDto dto,
     required String yesterday,
@@ -40,7 +41,7 @@ class WaterRemoteDataSource {
     final userRef = _firestore.collection(FirestorePaths.users).doc(uid);
     final logRef = userRef.collection(FirestorePaths.waterLogs).doc(dto.date);
 
-    await _firestore.runTransaction((transaction) async {
+    return _firestore.runTransaction((transaction) async {
       final userSnap = await transaction.get(userRef);
       final logSnap = await transaction.get(logRef);
 
@@ -49,6 +50,29 @@ class WaterRemoteDataSource {
 
       final result = compute(userData, logExists, yesterday);
 
+      var newBadgesCount = 0;
+
+      // Firestore transaction 규칙: 모든 read(get)를 write(set/update)보다 먼저 수행해야 함
+      DocumentSnapshot? goalBadgeSnap;
+      DocumentSnapshot? streakBadgeSnap;
+
+      final goalBadgeRef = userRef
+          .collection(FirestorePaths.badges)
+          .doc(BadgeType.day2L);
+      final streakBadgeRef = result.streakBadgeDocId != null
+          ? userRef
+              .collection(FirestorePaths.badges)
+              .doc(result.streakBadgeDocId!)
+          : null;
+
+      if (result.createGoalBadge) {
+        goalBadgeSnap = await transaction.get(goalBadgeRef);
+      }
+      if (streakBadgeRef != null) {
+        streakBadgeSnap = await transaction.get(streakBadgeRef);
+      }
+
+      // writes
       transaction.set(logRef, dto.toJson());
       transaction.update(userRef, result.userUpdate);
 
@@ -56,45 +80,26 @@ class WaterRemoteDataSource {
         _createGoalNotification(transaction, userRef, nowDateTimeString);
       }
       if (result.createGoalBadge) {
-        _createGoalBadge(transaction, userRef, dto.date);
+        if (goalBadgeSnap != null && !goalBadgeSnap.exists) {
+          transaction.set(goalBadgeRef, {
+            'name': '하루 2L 달성',
+            'description': '하루에 8잔 달성!',
+            'acquired': true,
+            'acquiredDate': dto.date,
+          });
+          newBadgesCount += 1;
+        }
       }
       if (result.streakBadgeDocId != null) {
-        _createStreakBadge(
-          transaction,
-          userRef,
-          result.streakBadgeDocId!,
-          dto.date,
-        );
+        if (streakBadgeRef != null && streakBadgeSnap != null && !streakBadgeSnap.exists) {
+          final content = _streakBadgeContent(result.streakBadgeDocId!, dto.date);
+          transaction.set(streakBadgeRef, content);
+          newBadgesCount += 1;
+        }
       }
+
+      return newBadgesCount;
     });
-  }
-
-  void _createGoalBadge(
-    Transaction transaction,
-    DocumentReference userRef,
-    String date,
-  ) {
-    final badgeRef = userRef
-        .collection(FirestorePaths.badges)
-        .doc(BadgeType.day2L);
-
-    transaction.set(badgeRef, {
-      'name': '하루 2L 달성',
-      'description': '하루에 8잔 달성!',
-      'acquired': true,
-      'acquiredDate': date,
-    });
-  }
-
-  void _createStreakBadge(
-    Transaction transaction,
-    DocumentReference userRef,
-    String badgeDocId,
-    String date,
-  ) {
-    final badgeRef = userRef.collection(FirestorePaths.badges).doc(badgeDocId);
-    final content = _streakBadgeContent(badgeDocId, date);
-    transaction.set(badgeRef, content);
   }
 
   Map<String, dynamic> _streakBadgeContent(String badgeDocId, String date) {

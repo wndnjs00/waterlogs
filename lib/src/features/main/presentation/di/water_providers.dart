@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waterlogs/src/features/account/presentation/di/account_providers.dart';
 import 'package:waterlogs/src/features/main/data/datasource/water_remote_datasource.dart';
+import 'package:waterlogs/src/features/main/data/repository/beverage_unlock_store_impl.dart';
 import 'package:waterlogs/src/features/main/data/repository/water_local_draft_repository_impl.dart';
 import 'package:waterlogs/src/features/main/data/repository/water_repository_impl.dart';
+import 'package:waterlogs/src/features/main/domain/repository/beverage_unlock_store.dart';
 import 'package:waterlogs/src/features/main/domain/repository/water_local_draft_repository.dart';
 import 'package:waterlogs/src/features/main/domain/repository/water_repository.dart';
 import 'package:waterlogs/src/features/main/domain/usecase/water_usecase.dart';
@@ -29,10 +31,15 @@ final waterLocalDraftRepositoryProvider = Provider<WaterLocalDraftRepository>(
   (ref) => WaterLocalDraftRepositoryImpl(),
 );
 
+final beverageUnlockStoreProvider = Provider<BeverageUnlockStore>(
+  (ref) => BeverageUnlockStoreImpl(),
+);
+
 final waterViewModelProvider =
     StateNotifierProvider<WaterViewModel, WaterViewState>((ref) {
   final useCase = ref.watch(waterUseCaseProvider);
   final timeProvider = ref.watch(timeProviderProvider);
   final draftRepo = ref.watch(waterLocalDraftRepositoryProvider);
-  return WaterViewModel(useCase, timeProvider, draftRepo);
+  final unlockStore = ref.watch(beverageUnlockStoreProvider);
+  return WaterViewModel(useCase, timeProvider, draftRepo, unlockStore);
 });

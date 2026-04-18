@@ -20,14 +20,20 @@ mixin _$WaterViewState {
   WaterLog? get todayLog => throw _privateConstructorUsedError;
   bool get isUpdating => throw _privateConstructorUsedError;
 
-  /// Firestore에 반영되지 않은 로컬 변경이 있음 (+/- 후 저장 전)
+  /// Firestore에 반영되지 않은 로컬 변경이 있음 (저장버튼 누르기 전)
   bool get hasUnsavedChanges => throw _privateConstructorUsedError;
   List<WaterLog> get weeklyLogs => throw _privateConstructorUsedError;
   List<WaterLog> get monthlyLogs => throw _privateConstructorUsedError;
   BeverageType get selectedBeverage => throw _privateConstructorUsedError;
 
-  /// 현재 선택된 음료의 "한 잔" 용량(ml). 가운데 박스는 이 값을 고정 표시.
+  /// 현재 선택된 음료한잔의 용량(ml). (가운데 박스 -> 이값 고정표시)
   int get servingMl => throw _privateConstructorUsedError;
+
+  /// 커피/주스/탄산/우유 해금 개수 (0~4)
+  int get unlockedPremiumBeverageCount => throw _privateConstructorUsedError;
+
+  /// 다음 해금까지 누적된 보상형 광고 시청 횟수 (0~1)
+  int get rewardedAdProgress => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
   /// Create a copy of WaterViewState
@@ -52,6 +58,8 @@ abstract class $WaterViewStateCopyWith<$Res> {
     List<WaterLog> monthlyLogs,
     BeverageType selectedBeverage,
     int servingMl,
+    int unlockedPremiumBeverageCount,
+    int rewardedAdProgress,
     String? errorMessage,
   });
 
@@ -80,6 +88,8 @@ class _$WaterViewStateCopyWithImpl<$Res, $Val extends WaterViewState>
     Object? monthlyLogs = null,
     Object? selectedBeverage = null,
     Object? servingMl = null,
+    Object? unlockedPremiumBeverageCount = null,
+    Object? rewardedAdProgress = null,
     Object? errorMessage = freezed,
   }) {
     return _then(
@@ -111,6 +121,14 @@ class _$WaterViewStateCopyWithImpl<$Res, $Val extends WaterViewState>
             servingMl: null == servingMl
                 ? _value.servingMl
                 : servingMl // ignore: cast_nullable_to_non_nullable
+                      as int,
+            unlockedPremiumBeverageCount: null == unlockedPremiumBeverageCount
+                ? _value.unlockedPremiumBeverageCount
+                : unlockedPremiumBeverageCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            rewardedAdProgress: null == rewardedAdProgress
+                ? _value.rewardedAdProgress
+                : rewardedAdProgress // ignore: cast_nullable_to_non_nullable
                       as int,
             errorMessage: freezed == errorMessage
                 ? _value.errorMessage
@@ -153,6 +171,8 @@ abstract class _$$WaterViewStateImplCopyWith<$Res>
     List<WaterLog> monthlyLogs,
     BeverageType selectedBeverage,
     int servingMl,
+    int unlockedPremiumBeverageCount,
+    int rewardedAdProgress,
     String? errorMessage,
   });
 
@@ -181,6 +201,8 @@ class __$$WaterViewStateImplCopyWithImpl<$Res>
     Object? monthlyLogs = null,
     Object? selectedBeverage = null,
     Object? servingMl = null,
+    Object? unlockedPremiumBeverageCount = null,
+    Object? rewardedAdProgress = null,
     Object? errorMessage = freezed,
   }) {
     return _then(
@@ -213,6 +235,14 @@ class __$$WaterViewStateImplCopyWithImpl<$Res>
             ? _value.servingMl
             : servingMl // ignore: cast_nullable_to_non_nullable
                   as int,
+        unlockedPremiumBeverageCount: null == unlockedPremiumBeverageCount
+            ? _value.unlockedPremiumBeverageCount
+            : unlockedPremiumBeverageCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        rewardedAdProgress: null == rewardedAdProgress
+            ? _value.rewardedAdProgress
+            : rewardedAdProgress // ignore: cast_nullable_to_non_nullable
+                  as int,
         errorMessage: freezed == errorMessage
             ? _value.errorMessage
             : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -233,6 +263,8 @@ class _$WaterViewStateImpl extends _WaterViewState {
     final List<WaterLog> monthlyLogs = const [],
     this.selectedBeverage = BeverageType.water,
     this.servingMl = 250,
+    this.unlockedPremiumBeverageCount = 0,
+    this.rewardedAdProgress = 0,
     this.errorMessage,
   }) : _weeklyLogs = weeklyLogs,
        _monthlyLogs = monthlyLogs,
@@ -244,7 +276,7 @@ class _$WaterViewStateImpl extends _WaterViewState {
   @JsonKey()
   final bool isUpdating;
 
-  /// Firestore에 반영되지 않은 로컬 변경이 있음 (+/- 후 저장 전)
+  /// Firestore에 반영되지 않은 로컬 변경이 있음 (저장버튼 누르기 전)
   @override
   @JsonKey()
   final bool hasUnsavedChanges;
@@ -270,16 +302,26 @@ class _$WaterViewStateImpl extends _WaterViewState {
   @JsonKey()
   final BeverageType selectedBeverage;
 
-  /// 현재 선택된 음료의 "한 잔" 용량(ml). 가운데 박스는 이 값을 고정 표시.
+  /// 현재 선택된 음료한잔의 용량(ml). (가운데 박스 -> 이값 고정표시)
   @override
   @JsonKey()
   final int servingMl;
+
+  /// 커피/주스/탄산/우유 해금 개수 (0~4)
+  @override
+  @JsonKey()
+  final int unlockedPremiumBeverageCount;
+
+  /// 다음 해금까지 누적된 보상형 광고 시청 횟수 (0~1)
+  @override
+  @JsonKey()
+  final int rewardedAdProgress;
   @override
   final String? errorMessage;
 
   @override
   String toString() {
-    return 'WaterViewState(todayLog: $todayLog, isUpdating: $isUpdating, hasUnsavedChanges: $hasUnsavedChanges, weeklyLogs: $weeklyLogs, monthlyLogs: $monthlyLogs, selectedBeverage: $selectedBeverage, servingMl: $servingMl, errorMessage: $errorMessage)';
+    return 'WaterViewState(todayLog: $todayLog, isUpdating: $isUpdating, hasUnsavedChanges: $hasUnsavedChanges, weeklyLogs: $weeklyLogs, monthlyLogs: $monthlyLogs, selectedBeverage: $selectedBeverage, servingMl: $servingMl, unlockedPremiumBeverageCount: $unlockedPremiumBeverageCount, rewardedAdProgress: $rewardedAdProgress, errorMessage: $errorMessage)';
   }
 
   @override
@@ -305,6 +347,14 @@ class _$WaterViewStateImpl extends _WaterViewState {
                 other.selectedBeverage == selectedBeverage) &&
             (identical(other.servingMl, servingMl) ||
                 other.servingMl == servingMl) &&
+            (identical(
+                  other.unlockedPremiumBeverageCount,
+                  unlockedPremiumBeverageCount,
+                ) ||
+                other.unlockedPremiumBeverageCount ==
+                    unlockedPremiumBeverageCount) &&
+            (identical(other.rewardedAdProgress, rewardedAdProgress) ||
+                other.rewardedAdProgress == rewardedAdProgress) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage));
   }
@@ -319,6 +369,8 @@ class _$WaterViewStateImpl extends _WaterViewState {
     const DeepCollectionEquality().hash(_monthlyLogs),
     selectedBeverage,
     servingMl,
+    unlockedPremiumBeverageCount,
+    rewardedAdProgress,
     errorMessage,
   );
 
@@ -343,6 +395,8 @@ abstract class _WaterViewState extends WaterViewState {
     final List<WaterLog> monthlyLogs,
     final BeverageType selectedBeverage,
     final int servingMl,
+    final int unlockedPremiumBeverageCount,
+    final int rewardedAdProgress,
     final String? errorMessage,
   }) = _$WaterViewStateImpl;
   const _WaterViewState._() : super._();
@@ -352,7 +406,7 @@ abstract class _WaterViewState extends WaterViewState {
   @override
   bool get isUpdating;
 
-  /// Firestore에 반영되지 않은 로컬 변경이 있음 (+/- 후 저장 전)
+  /// Firestore에 반영되지 않은 로컬 변경이 있음 (저장버튼 누르기 전)
   @override
   bool get hasUnsavedChanges;
   @override
@@ -362,9 +416,17 @@ abstract class _WaterViewState extends WaterViewState {
   @override
   BeverageType get selectedBeverage;
 
-  /// 현재 선택된 음료의 "한 잔" 용량(ml). 가운데 박스는 이 값을 고정 표시.
+  /// 현재 선택된 음료한잔의 용량(ml). (가운데 박스 -> 이값 고정표시)
   @override
   int get servingMl;
+
+  /// 커피/주스/탄산/우유 해금 개수 (0~4)
+  @override
+  int get unlockedPremiumBeverageCount;
+
+  /// 다음 해금까지 누적된 보상형 광고 시청 횟수 (0~1)
+  @override
+  int get rewardedAdProgress;
   @override
   String? get errorMessage;
 

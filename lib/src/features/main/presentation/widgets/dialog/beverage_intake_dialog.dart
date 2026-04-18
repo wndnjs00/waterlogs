@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waterlogs/src/core/theme/app_colors.dart';
 import 'package:waterlogs/src/features/main/domain/model/beverage_type.dart';
+import 'package:waterlogs/src/features/main/presentation/di/water_providers.dart';
 import 'package:waterlogs/src/features/main/presentation/widgets/dialog/waterlog_base_dialog.dart';
+import 'package:waterlogs/src/features/main/presentation/widgets/dialog/beverage_unlock_dialog.dart';
 
 class BeverageIntakeResult {
   final BeverageType type;
@@ -10,7 +13,7 @@ class BeverageIntakeResult {
   const BeverageIntakeResult(this.type, this.ml);
 }
 
-class BeverageIntakeDialog extends StatefulWidget {
+class BeverageIntakeDialog extends ConsumerStatefulWidget {
   const BeverageIntakeDialog({super.key});
 
   static Future<BeverageIntakeResult?> show(BuildContext context) {
@@ -21,15 +24,25 @@ class BeverageIntakeDialog extends StatefulWidget {
   }
 
   @override
-  State<BeverageIntakeDialog> createState() => _BeverageIntakeDialogState();
+  ConsumerState<BeverageIntakeDialog> createState() => _BeverageIntakeDialogState();
 }
 
-class _BeverageIntakeDialogState extends State<BeverageIntakeDialog> {
+class _BeverageIntakeDialogState extends ConsumerState<BeverageIntakeDialog> {
   BeverageType _selected = BeverageType.water;
   int _ml = 250;
 
   @override
   Widget build(BuildContext context) {
+    // 잠금 해제(광고/뱃지) 상태 변경 시 다이얼로그도 즉시 리빌드되도록 watch
+    ref.watch(waterViewModelProvider);
+    final waterVm = ref.read(waterViewModelProvider.notifier);
+    final hasLocked = [
+      BeverageType.coffee,
+      BeverageType.juice,
+      BeverageType.soda,
+      BeverageType.milk,
+    ].any(waterVm.isBeverageLocked);
+
     return WaterLogBaseDialog(
       title: '${_selected.label} 한 잔 마셨나요?',
       content: Column(
@@ -37,6 +50,7 @@ class _BeverageIntakeDialogState extends State<BeverageIntakeDialog> {
         children: [
           _BeveragePicker(
             selected: _selected,
+            isLocked: waterVm.isBeverageLocked,
             onSelected: (t) => setState(() {
               final changed = t != _selected;
               _selected = t;
@@ -44,6 +58,20 @@ class _BeverageIntakeDialogState extends State<BeverageIntakeDialog> {
               if (changed) _ml = 250;
             }),
           ),
+          if (hasLocked) ...[
+            const SizedBox(height: 6),
+            GestureDetector(
+              onTap: () => BeverageUnlockDialog.show(context),
+              child: Text(
+                '※ 음료 잠금 풀기',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
           const SizedBox(height: 16),
           _MlStepper(
             ml: _ml,
@@ -67,10 +95,12 @@ class _BeverageIntakeDialogState extends State<BeverageIntakeDialog> {
 class _BeveragePicker extends StatelessWidget {
   const _BeveragePicker({
     required this.selected,
+    required this.isLocked,
     required this.onSelected,
   });
 
   final BeverageType selected;
+  final bool Function(BeverageType) isLocked;
   final ValueChanged<BeverageType> onSelected;
 
   @override
@@ -85,18 +115,24 @@ class _BeveragePicker extends StatelessWidget {
       BeverageType.milk,
     ];
 
-    return Wrap(
-      spacing: 10,
-      runSpacing: 10,
-      alignment: WrapAlignment.center,
-      children: [
-        for (final t in items)
-          _BeverageTile(
-            type: t,
-            selected: t == selected,
-            onTap: () => onSelected(t),
-          ),
-      ],
+    return SizedBox(
+      width: double.infinity,
+      child: Center(
+        child: Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          alignment: WrapAlignment.center,
+          children: [
+            for (final t in items)
+              _BeverageTile(
+                type: t,
+                selected: t == selected,
+                locked: isLocked(t),
+                onTap: () => onSelected(t),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -105,20 +141,24 @@ class _BeverageTile extends StatelessWidget {
   const _BeverageTile({
     required this.type,
     required this.selected,
+    required this.locked,
     required this.onTap,
   });
 
   final BeverageType type;
   final bool selected;
+  final bool locked;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final border = selected ? type.color : Colors.grey.shade300;
-    final bg = selected ? type.color.withValues(alpha: 0.08) : Colors.white;
+    final effectiveSelected = selected && !locked;
+    final border = effectiveSelected ? type.color : Colors.grey.shade300;
+    final bg = effectiveSelected ? type.color.withValues(alpha: 0.08) : Colors.white;
+    final opacity = locked ? 0.35 : 1.0;
 
     return InkWell(
-      onTap: onTap,
+      onTap: locked ? null : onTap,
       borderRadius: BorderRadius.circular(10),
       child: Container(
         width: 58,
@@ -126,26 +166,49 @@ class _BeverageTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: border, width: 1),
+          border: Border.all(
+            color: locked ? Colors.grey.shade300 : border,
+            width: 1,
+          ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: Stack(
+          alignment: Alignment.center,
           children: [
-            Image.asset(
-              type.assetPath,
-              width: 45,
-              height: 45,
-              errorBuilder: (_, __, ___) => Icon(type.icon, size: 28, color: type.color),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              type.label,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey.shade900,
-                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            Opacity(
+              opacity: opacity,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    type.assetPath,
+                    width: 45,
+                    height: 45,
+                    errorBuilder: (_, __, ___) =>
+                        Icon(type.icon, size: 28, color: type.color),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    type.label,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade900,
+                      fontWeight: effectiveSelected ? FontWeight.w700 : FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ),
+            if (locked)
+              Positioned(
+                right: 0,
+                top: 0,
+                child: Icon(
+                  Icons.lock_rounded,
+                  size: 14,
+                  color: Colors.grey.shade600,
+                ),
+              ),
           ],
         ),
       ),

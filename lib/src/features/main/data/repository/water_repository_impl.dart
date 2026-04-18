@@ -20,12 +20,12 @@ class WaterRepositoryImpl implements WaterRepository {
   }
 
   @override
-  Future<void> saveWithAchievement(String uid, WaterLog waterLog) async {
+  Future<int> saveWithAchievement(String uid, WaterLog waterLog) async {
     final dto = WaterLogMapper.toDto(waterLog);
     final yesterday = _timeProvider.yesterdayString();
     final now = _timeProvider.nowDateTimeString();
 
-    await _dataSource.saveWithAchievement(
+    return _dataSource.saveWithAchievement(
       uid: uid,
       dto: dto,
       yesterday: yesterday,

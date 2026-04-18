@@ -9,7 +9,7 @@ class WaterUseCase {
   Future<WaterLog?> getToday(String uid, String date) =>
       _repository.getTodayLog(uid, date);
 
-  Future<void> saveWithAchievement(String uid, WaterLog log) =>
+  Future<int> saveWithAchievement(String uid, WaterLog log) =>
       _repository.saveWithAchievement(uid, log);
 
   Future<List<WaterLog>> weekly(String uid, String start, String end) =>

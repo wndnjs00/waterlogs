@@ -2,18 +2,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:waterlogs/src/core/util/auth_error_mapper.dart';
 import 'package:waterlogs/src/features/account/domain/repository/time_provider.dart';
 import 'package:waterlogs/src/features/main/domain/model/beverage_type.dart';
+import 'package:waterlogs/src/features/main/domain/repository/beverage_unlock_store.dart';
 import 'package:waterlogs/src/features/main/domain/model/water_log.dart';
 import 'package:waterlogs/src/features/main/domain/repository/water_local_draft_repository.dart';
 import 'package:waterlogs/src/features/main/domain/usecase/water_usecase.dart';
 import 'package:waterlogs/src/features/main/presentation/viewmodel/state/water_view_state.dart';
 
 class WaterViewModel extends StateNotifier<WaterViewState> {
-  WaterViewModel(this._waterUseCase, this._timeProvider, this._draftRepository)
+  WaterViewModel(
+    this._waterUseCase,
+    this._timeProvider,
+    this._draftRepository,
+    this._unlockStore,
+  )
     : super(const WaterViewState());
 
   final WaterUseCase _waterUseCase;
   final TimeProvider _timeProvider;
   final WaterLocalDraftRepository _draftRepository;
+  final BeverageUnlockStore _unlockStore;
   String? _uid;
 
   Future<void> loadToday(String? uid, {int dailyGoal = 8}) async {
@@ -21,6 +28,7 @@ class WaterViewModel extends StateNotifier<WaterViewState> {
     _uid = uid;
 
     try {
+      final unlock = await _unlockStore.load(uid);
       final date = _timeProvider.waterLogDateString();
       final serverLog = await _waterUseCase.getToday(uid, date);
 
@@ -58,6 +66,8 @@ class WaterViewModel extends StateNotifier<WaterViewState> {
         todayLog: _withDerived(displayLog),
         errorMessage: null,
         hasUnsavedChanges: unsaved,
+        unlockedPremiumBeverageCount: unlock.unlockedPremiumCount,
+        rewardedAdProgress: unlock.rewardedProgress,
       );
       await _loadWeeklyAndMonthly(uid);
       _syncChartsWithToday(_withDerived(displayLog));
@@ -129,8 +139,54 @@ class WaterViewModel extends StateNotifier<WaterViewState> {
   }
 
   void selectBeverage(BeverageType type, int servingMl) {
+    if (isBeverageLocked(type)) return;
     final normalized = servingMl.clamp(50, 2000);
     state = state.copyWith(selectedBeverage: type, servingMl: normalized);
+  }
+
+  static const _premiumOrder = <BeverageType>[
+    BeverageType.coffee,
+    BeverageType.juice,
+    BeverageType.soda,
+    BeverageType.milk,
+  ];
+
+  bool isBeverageLocked(BeverageType type) {
+    final idx = _premiumOrder.indexOf(type);
+    if (idx < 0) return false; // water, tea는 잠금 없음
+    return idx >= state.unlockedPremiumBeverageCount;
+  }
+
+  Future<void> onRewardedAdEarned() async {
+    final uid = _uid;
+    if (uid == null) return;
+    final next = await _unlockStore.onRewardedAdEarned(uid);
+    state = state.copyWith(
+      unlockedPremiumBeverageCount: next.unlockedPremiumCount,
+      rewardedAdProgress: next.rewardedProgress,
+    );
+  }
+
+  Future<void> onBadgeEarnedUnlock({int count = 1}) async {
+    final uid = _uid;
+    if (uid == null) return;
+    final next = await _unlockStore.onBadgeEarned(uid, count: count);
+    state = state.copyWith(
+      unlockedPremiumBeverageCount: next.unlockedPremiumCount,
+      rewardedAdProgress: next.rewardedProgress,
+    );
+  }
+
+  /// 뱃지 획득 해금은 "현재 화면에서 물 기능이 아직 로드 전"이어도 발생할 수 있어서, (저장버튼을 누르지않고, 테스트용으로 파베에만 저장한 경우)
+  /// uid를 직접 받아 처리할 수 있는 엔트리 포인트를 따로 둔다.
+  Future<void> onBadgeEarnedUnlockForUid(String uid, {int count = 1}) async {
+    final next = await _unlockStore.onBadgeEarned(uid, count: count);
+
+    // uid별 저장을 쓰는 값이므로, 호출한 쪽이 현재 유저 uid라고 가정하고 항상 UI 상태도 동기화한다.
+    state = state.copyWith(
+      unlockedPremiumBeverageCount: next.unlockedPremiumCount,
+      rewardedAdProgress: next.rewardedProgress,
+    );
   }
 
   Future<void> _applyLocalChange(WaterLog newLog) async {
@@ -154,8 +210,14 @@ class WaterViewModel extends StateNotifier<WaterViewState> {
 
     state = state.copyWith(isUpdating: true, errorMessage: null);
     try {
-      await _waterUseCase.saveWithAchievement(uid, log);
+      final newBadges = await _waterUseCase.saveWithAchievement(uid, log);
       await _draftRepository.clearDraft(uid, log.date);
+
+      // "이번 저장에서 새로 획득된 뱃지 수"만큼 음료 해금
+      if (newBadges > 0) {
+        await onBadgeEarnedUnlockForUid(uid, count: newBadges);
+      }
+
       // 저장 직후 서버에서 오늘기록 다시 읽어와 재동기화
       final serverToday = await _waterUseCase.getToday(uid, log.date);
       final synced = _withDerived(serverToday ?? log);

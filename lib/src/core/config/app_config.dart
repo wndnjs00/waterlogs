@@ -38,4 +38,16 @@ class AppConfig {
     return v;
   }
 
+  static String? get admobRewardedAndroid {
+    final v = dotenv.env['ADMOB_REWARDED_ANDROID']?.trim();
+    if (v == null || v.isEmpty) return null;
+    return v;
+  }
+
+  static String? get admobRewardedIos {
+    final v = dotenv.env['ADMOB_REWARDED_IOS']?.trim();
+    if (v == null || v.isEmpty) return null;
+    return v;
+  }
+
 }

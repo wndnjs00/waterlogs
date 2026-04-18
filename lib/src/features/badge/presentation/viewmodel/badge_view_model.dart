@@ -9,6 +9,7 @@ import 'package:waterlogs/src/features/badge/domain/model/badge.dart';
 import 'package:waterlogs/src/features/badge/domain/repository/badge_shown_store_repository.dart';
 import 'package:waterlogs/src/features/badge/domain/usecase/badge_usecase.dart';
 import 'package:waterlogs/src/features/badge/presentation/viewmodel/badge_state.dart';
+import 'package:waterlogs/src/features/main/presentation/di/water_providers.dart';
 
 class BadgeViewModel extends StateNotifier<BadgeState> {
   BadgeViewModel(
@@ -76,14 +77,17 @@ class BadgeViewModel extends StateNotifier<BadgeState> {
   }
 
   Future<void> _onBadgesSnapshot(Map<String, Badge> map) async {
-    final shown = await _shownStore.getShownBadgeKeys();
+    final uid = _ref.read(authViewModelProvider).user?.uid;
+    if (uid == null) return;
+
+    final shown = await _shownStore.getShownBadgeKeys(uid);
     if (_disposed) return;
 
     final newQueueKeys = <String>[];
 
     for (final key in map.keys) {
       if (!shown.contains(key)) {
-        await _shownStore.saveBadgeKey(key);
+        await _shownStore.saveBadgeKey(uid, key);
         if (!state.pendingEarnedDialogKeys.contains(key)) {
           newQueueKeys.add(key);
         }
@@ -91,6 +95,14 @@ class BadgeViewModel extends StateNotifier<BadgeState> {
     }
 
     if (_disposed) return;
+
+    // 항상 관찰하지는 않되(비용 절감),
+    // 사용자가 "뱃지 화면"을 열었을 때 새로 감지된 뱃지에 대해서는 음료 잠금도 함께 해제한다
+    if (newQueueKeys.isNotEmpty) {
+      await _ref
+          .read(waterViewModelProvider.notifier)
+          .onBadgeEarnedUnlockForUid(uid, count: newQueueKeys.length);
+    }
 
     state = state.copyWith(
       badges: map,
