@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:waterlogs/src/core/ads/admob_banner.dart';
 import 'package:waterlogs/src/core/theme/app_colors.dart';
 import 'package:waterlogs/src/features/notification/domain/model/notification_model.dart';
 import 'package:waterlogs/src/features/notification/presentation/di/notification_providers.dart';
@@ -37,22 +38,35 @@ class NotificationScreen extends ConsumerWidget {
         ),
         backgroundColor: AppColors.mainBlue,
         foregroundColor: Colors.white,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        shadowColor: Colors.transparent,
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        itemCount: state.notifications.length,
-        itemBuilder: (context, index) {
-          final item = state.notifications[index];
-          return _NotificationItem(
-            item: item,
-            time: viewModel.formatTime(item.createdAt),
-            onTap: () {
-              if (!item.isRead) {
-                viewModel.markAsRead(item.id);
-              }
-            },
-          );
-        },
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AdmobBanner(
+            backgroundColor: AppColors.screenBackground,
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              itemCount: state.notifications.length,
+              itemBuilder: (context, index) {
+                final item = state.notifications[index];
+                return _NotificationItem(
+                  item: item,
+                  time: viewModel.formatTime(item.createdAt),
+                  onTap: () {
+                    if (!item.isRead) {
+                      viewModel.markAsRead(item.id);
+                    }
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

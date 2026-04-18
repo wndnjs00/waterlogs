@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:waterlogs/src/core/ads/admob_banner.dart';
 import 'package:waterlogs/src/core/theme/app_colors.dart';
 import 'package:waterlogs/src/features/badge/presentation/di/badge_providers.dart';
 import 'package:waterlogs/src/features/badge/presentation/viewmodel/badge_state.dart';
@@ -67,24 +68,34 @@ class _BadgeScreenState extends ConsumerState<BadgeScreen> {
         backgroundColor: AppColors.mainBlue,
         foregroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            // 셀 높이 확보 (이미지 + 제목 2줄 + 상태 한 줄)
-            childAspectRatio: 0.72,
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  // 셀 높이 확보 (이미지 + 제목 2줄 + 상태 한 줄)
+                  childAspectRatio: 0.72,
+                ),
+                itemCount: _badgeOrder.length,
+                itemBuilder: (context, index) {
+                  final key = _badgeOrder[index];
+                  final badge = state.badges[key];
+                  return BadgeGridItem(
+                    isAchieved: badge != null,
+                    title: badge?.name ?? '🔒잠김',
+                  );
+                },
+              ),
+            ),
           ),
-          itemCount: _badgeOrder.length,
-          itemBuilder: (context, index) {
-            final key = _badgeOrder[index];
-            final badge = state.badges[key];
-            return BadgeGridItem(
-              isAchieved: badge != null,
-              title: badge?.name ?? '🔒잠김',
-            );
-          },
-        ),
+          const SafeArea(
+            top: false,
+            child: AdmobBanner(),
+          ),
+        ],
       ),
     );
   }
