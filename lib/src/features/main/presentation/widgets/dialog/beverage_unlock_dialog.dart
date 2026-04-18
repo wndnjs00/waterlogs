@@ -36,7 +36,7 @@ class _BeverageUnlockDialogState extends ConsumerState<BeverageUnlockDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            '광고를 2회 시청하거나, 뱃지를 하나 획득할때마다,\n음료 잠금을 풀 수 있어요',
+            '광고를 2회 시청하거나, 뱃지를 하나 획득하면\n음료 잠금을 풀 수 있어요',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 13,

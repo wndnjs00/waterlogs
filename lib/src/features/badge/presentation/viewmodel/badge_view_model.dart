@@ -96,8 +96,8 @@ class BadgeViewModel extends StateNotifier<BadgeState> {
 
     if (_disposed) return;
 
-    // 항상 관찰하지는 않되(비용 절감),
-    // 사용자가 "뱃지 화면"을 열었을 때 새로 감지된 뱃지에 대해서는 음료 잠금도 함께 해제한다
+    // 대안 A 유지: 항상 관찰하지는 않되(비용 절감),
+    // 사용자가 "뱃지 화면"을 열었을 때 새로 감지된 뱃지에 대해서는 음료 잠금도 함께 해제한다.
     if (newQueueKeys.isNotEmpty) {
       await _ref
           .read(waterViewModelProvider.notifier)

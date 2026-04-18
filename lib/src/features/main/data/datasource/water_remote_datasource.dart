@@ -52,7 +52,7 @@ class WaterRemoteDataSource {
 
       var newBadgesCount = 0;
 
-      // Firestore transaction 규칙: 모든 read(get)를 write(set/update)보다 먼저 수행해야 함
+      // Firestore transaction 규칙: 모든 read(get)를 write(set/update)보다 먼저 수행해야 함.
       DocumentSnapshot? goalBadgeSnap;
       DocumentSnapshot? streakBadgeSnap;
 

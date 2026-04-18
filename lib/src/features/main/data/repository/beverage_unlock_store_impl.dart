@@ -4,7 +4,8 @@ import 'package:waterlogs/src/features/main/domain/repository/beverage_unlock_st
 
 class BeverageUnlockStoreImpl implements BeverageUnlockStore {
   // legacy(전역) 키: 초기 구현에서 계정 구분이 없어 공유되던 값
-  static const _legacyUnlockedPremiumCount = 'waterlog_unlocked_premium_beverages';
+  static const _legacyUnlockedPremiumCount =
+      'waterlog_unlocked_premium_beverages';
   static const _legacyRewardedProgress = 'waterlog_rewarded_progress';
 
   static const _maxPremium = 4;

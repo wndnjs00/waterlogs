@@ -177,7 +177,7 @@ class WaterViewModel extends StateNotifier<WaterViewState> {
     );
   }
 
-  /// 뱃지 획득 해금은 "현재 화면에서 물 기능이 아직 로드 전"이어도 발생할 수 있어서, (저장버튼을 누르지않고, 테스트용으로 파베에만 저장한 경우)
+  /// 뱃지 획득 해금은 "현재 화면에서 물 기능이 아직 로드 전"이어도 발생할 수 있어서,
   /// uid를 직접 받아 처리할 수 있는 엔트리 포인트를 따로 둔다.
   Future<void> onBadgeEarnedUnlockForUid(String uid, {int count = 1}) async {
     final next = await _unlockStore.onBadgeEarned(uid, count: count);
@@ -213,7 +213,7 @@ class WaterViewModel extends StateNotifier<WaterViewState> {
       final newBadges = await _waterUseCase.saveWithAchievement(uid, log);
       await _draftRepository.clearDraft(uid, log.date);
 
-      // "이번 저장에서 새로 획득된 뱃지 수"만큼 음료 해금
+      // 대안 A: "이번 저장에서 새로 획득된 뱃지 수"만큼 음료 해금
       if (newBadges > 0) {
         await onBadgeEarnedUnlockForUid(uid, count: newBadges);
       }
