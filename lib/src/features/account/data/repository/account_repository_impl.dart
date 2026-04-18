@@ -266,8 +266,11 @@ class AccountRepositoryImpl implements AccountRepository {
 
   @override
   Future<UserInfo> signInWithGoogle() async {
-    final idToken = await _googleAuth.getIdToken();
-    final credential = GoogleAuthProvider.credential(idToken: idToken);
+    final tokens = await _googleAuth.signInForFirebase();
+    final credential = GoogleAuthProvider.credential(
+      idToken: tokens.idToken,
+      accessToken: tokens.accessToken,
+    );
     await _auth.signInWithCredential(credential);
 
     final user = _auth.currentUser;

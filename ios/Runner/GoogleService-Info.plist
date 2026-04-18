@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>697222347127-rnaesrn8e0f63asicl0nsj9ln4mmbo3g.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.697222347127-rnaesrn8e0f63asicl0nsj9ln4mmbo3g</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>697222347127-52bt7rt018b1flnb2cef95ld0jum10tp.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDpcMMh3oW2bzKdGUy61DA95Xy_xwcF-Xk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>697222347127</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.waterlogs</string>
+	<key>PROJECT_ID</key>
+	<string>waterlog-f7fc7</string>
+	<key>STORAGE_BUCKET</key>
+	<string>waterlog-f7fc7.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:697222347127:ios:0ddc1fabee4c8b71878972</string>
+</dict>
+</plist>

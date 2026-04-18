@@ -1,19 +1,17 @@
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:waterlogs/src/core/config/app_config.dart';
 
 class GoogleAuthDataSource {
 
   final GoogleSignIn _googleSignIn;
-  final String serverClientId;
 
-  GoogleAuthDataSource({required this.serverClientId})
+  GoogleAuthDataSource({required String serverClientId})
     : _googleSignIn = GoogleSignIn(
         scopes: const ['email', 'profile'],
-        serverClientId: AppConfig.googleServerClientId,
+        serverClientId: serverClientId,
       );
 
-
-  Future<String> getIdToken() async {
+  /// Firebase `GoogleAuthProvider.credential`용 토큰. [serverClientId]는 웹 클라이언트 ID여야 [idToken]이 나온다.
+  Future<({String idToken, String? accessToken})> signInForFirebase() async {
     final GoogleSignInAccount? account = await _googleSignIn.signIn();
 
     if (account == null) {
@@ -24,10 +22,13 @@ class GoogleAuthDataSource {
     final idToken = auth.idToken;
 
     if (idToken == null || idToken.isEmpty) {
-      throw StateError('Google idToken is null');
+      throw StateError(
+        'Google idToken is null — .env의 GOOGLE_SERVER_CLIENT_ID가 '
+        'Firebase 콘솔의 웹 OAuth 클라이언트 ID와 같은지 확인하세요',
+      );
     }
 
-    return idToken;
+    return (idToken: idToken, accessToken: auth.accessToken);
   }
 
 

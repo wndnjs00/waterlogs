@@ -24,6 +24,9 @@
 		<string>????</string>
 		<key>CFBundleVersion</key>
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
+		<!-- Google Sign-In: iOS 클라이언트 ID (GoogleService-Info.plist CLIENT_ID와 동일) -->
+		<key>GIDClientID</key>
+		<string>697222347127-rnaesrn8e0f63asicl0nsj9ln4mmbo3g.apps.googleusercontent.com</string>
 		<key>CFBundleURLTypes</key>
 		<array>
 			<!-- Naver Login -->
@@ -33,13 +36,13 @@
 					<string>waterlogs</string>
 				</array>
 			</dict>
-			<!-- Google Login -->
+			<!-- Google Login: REVERSED_CLIENT_ID (빌드 설정 누락 시 $(GOOGLE_CLIENT_ID)가 그대로 들어가 OAuth 콜백 실패) -->
 			<dict>
 				<key>CFBundleTypeRole</key>
 				<string>Editor</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>$(GOOGLE_CLIENT_ID)</string>
+					<string>com.googleusercontent.apps.697222347127-rnaesrn8e0f63asicl0nsj9ln4mmbo3g</string>
 				</array>
 			</dict>
 			<!-- KAKAO LOGIN -->

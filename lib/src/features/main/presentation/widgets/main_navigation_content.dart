@@ -20,6 +20,7 @@ class MainNavigationContent extends StatefulWidget {
   final List<WaterLog> weeklyLogs;
   final List<WaterLog> monthlyLogs;
   final int? dailyGoal;
+  final String uid;
 
   const MainNavigationContent({
     super.key,
@@ -36,6 +37,7 @@ class MainNavigationContent extends StatefulWidget {
     required this.weeklyLogs,
     required this.monthlyLogs,
     this.dailyGoal,
+    required this.uid,
   });
 
   @override
@@ -99,6 +101,7 @@ class _MainNavigationContentState extends State<MainNavigationContent> {
                   MonthlyChartContent(
                     logs: widget.monthlyLogs,
                     monthAvg: _monthAvg(widget.monthlyLogs),
+                    uid: widget.uid,
                   ),
               ],
             ),

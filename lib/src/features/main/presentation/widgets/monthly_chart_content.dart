@@ -3,16 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:waterlogs/src/core/theme/app_colors.dart';
 import 'package:waterlogs/src/features/main/domain/model/beverage_type.dart';
 import 'package:waterlogs/src/features/main/domain/model/water_log.dart';
+import 'package:waterlogs/src/features/main/presentation/widgets/intake_calendar_sheet.dart';
 
 class MonthlyChartContent extends StatelessWidget {
   final List<WaterLog> logs;
   final double monthAvg;
+  final String uid;
 
   const MonthlyChartContent({
     super.key,
     required this.logs,
     required this.monthAvg,
+    required this.uid,
   });
+
+  String _koreanDateLabel(DateTime d) => '${d.year}년 ${d.month}월 ${d.day}일';
 
   static const _weekLabels = ['1주차', '2주차', '3주차', '4주차'];
   static const _maxY = 10.0;
@@ -51,10 +56,47 @@ class MonthlyChartContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final grouped = _groupByWeek();
 
+    final referenceDay = DateTime.now();
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Row(
+            children: [
+              Text(
+                '기간',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey.shade800,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Spacer(),
+              Material(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(12),
+                child: InkWell(
+                  onTap: () => IntakeCalendarSheet.show(context, uid: uid),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    child: Text(
+                      _koreanDateLabel(referenceDay),
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey.shade900,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         SizedBox(
           height: 260,
           child: LineChart(

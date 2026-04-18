@@ -88,6 +88,7 @@ class _MainScreenState extends ConsumerState<MainScreen>
         Expanded(
           child: MainNavigationContent(
             log: todayLog,
+            uid: user.uid,
             streakDays: user.streakDays ?? 0,
             onAdd: () => ref.read(waterViewModelProvider.notifier).addCup(),
             onRemove: () => ref.read(waterViewModelProvider.notifier).removeCup(),
