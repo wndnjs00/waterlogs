@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:waterlogs/src/core/crashlytics/app_crashlytics.dart';
 import 'package:waterlogs/src/core/util/auth_error_mapper.dart';
 import 'package:waterlogs/src/features/account/domain/usecase/account_usecase.dart';
 import 'package:waterlogs/src/features/account/domain/usecase/auth_usecase.dart';
@@ -19,6 +20,7 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
   StreamSubscription<UserInfo?>? _userSub;
   StreamSubscription<String>? _tokenSub;
   bool _fcmInitialized = false;
+  UserInfo? _crashlyticsUserSnapshot;
 
   AuthViewModel(this._authUseCase, this._accountUseCase)
     : super(AuthViewState.initial) {
@@ -34,13 +36,19 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
             state = state.copyWith(user: user);
           }
         })
-        .catchError((e) async {
+        .catchError((Object e, StackTrace st) async {
+          await AppCrashlytics.log('auth:auto_load_failed');
+          await AppCrashlytics.recordHandledError(e, st, reason: 'loadUser');
           state = state.copyWith(toastMessage: AuthErrorMapper.map(e));
           // Auth 세션은 있는데 Firestore 문서 없음 (불일치 시) → 로그아웃하여 로그인 화면에서 재시도 가능하게
           await _accountUseCase.logout(null);
         });
 
     _userSub = _accountUseCase.getAccountInfo().listen((user) async {
+      if (user != _crashlyticsUserSnapshot) {
+        _crashlyticsUserSnapshot = user;
+        await AppCrashlytics.syncUserContext(user);
+      }
       state = state.copyWith(user: user);
       if (user != null) {
         await _setupFcm();
@@ -112,8 +120,11 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
         await _accountUseCase.saveFcmToken(newToken);
       });
       _fcmInitialized = true;
-    } catch (e) {
+      await AppCrashlytics.log('push:fcm_ready');
+    } catch (e, st) {
       debugPrint('FCM 초기화 실패: $e');
+      await AppCrashlytics.log('push:fcm_init_failed');
+      await AppCrashlytics.recordHandledError(e, st, reason: 'fcm_init');
     }
   }
 
@@ -132,6 +143,7 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
     required String name,
   }) async {
     state = state.copyWith(signUpState: EmailAuthState.loading);
+    await AppCrashlytics.log('auth:email_sign_up_start');
 
     try {
       final user = await _authUseCase.signUpWithEmail(
@@ -145,8 +157,10 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
       await _setupFcm();
 
       state = state.copyWith(signUpState: EmailAuthState.success);
+      await AppCrashlytics.log('auth:email_sign_up_ok');
     } catch (e) {
       final msg = AuthErrorMapper.map(e);
+      await AppCrashlytics.log('auth:email_sign_up_err');
       state = state.copyWith(
         signUpState: EmailAuthState(
           status: EmailAuthStatus.error,
@@ -162,6 +176,7 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
     required String password,
   }) async {
     state = state.copyWith(signInState: EmailAuthState.loading);
+    await AppCrashlytics.log('auth:email_sign_in_start');
 
     try {
       final user = await _authUseCase.signInWithEmail(
@@ -174,8 +189,10 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
       await _setupFcm();
 
       state = state.copyWith(signInState: EmailAuthState.success);
+      await AppCrashlytics.log('auth:email_sign_in_ok');
     } catch (e) {
       final msg = AuthErrorMapper.map(e);
+      await AppCrashlytics.log('auth:email_sign_in_err');
       state = state.copyWith(
         signInState: EmailAuthState(
           status: EmailAuthStatus.error,
@@ -188,19 +205,25 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
 
   Future<void> logout(LoginProvider? provider) async {
     try {
+      await AppCrashlytics.log('auth:logout_start');
       await _accountUseCase.logout(provider);
       state = state.copyWith(toastMessage: '로그아웃 되었습니다');
+      await AppCrashlytics.log('auth:logout_ok');
     } catch (e) {
+      await AppCrashlytics.log('auth:logout_err');
       state = state.copyWith(toastMessage: AuthErrorMapper.map(e));
     }
   }
 
   Future<void> signInWithKakao() async {
     try {
+      await AppCrashlytics.log('auth:kakao_start');
       final user = await _authUseCase.signInWithKakao();
       state = state.copyWith(user: user);
       await _setupFcm();
+      await AppCrashlytics.log('auth:kakao_ok');
     } catch (e) {
+      await AppCrashlytics.log('auth:kakao_err');
       showOAuthError(e);
     }
   }
@@ -208,10 +231,13 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
   // 네이버 로그인
   Future<void> signInWithNaver() async {
     try {
+      await AppCrashlytics.log('auth:naver_start');
       final user = await _authUseCase.signInWithNaver();
       state = state.copyWith(user: user);
       await _setupFcm();
+      await AppCrashlytics.log('auth:naver_ok');
     } catch (e) {
+      await AppCrashlytics.log('auth:naver_err');
       showOAuthError(e);
     }
   }
@@ -219,10 +245,13 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
   // 구글 로그인
   Future<void> signInWithGoogle() async {
     try {
+      await AppCrashlytics.log('auth:google_start');
       final user = await _authUseCase.signInWithGoogle();
       state = state.copyWith(user: user);
       await _setupFcm();
+      await AppCrashlytics.log('auth:google_ok');
     } catch (e) {
+      await AppCrashlytics.log('auth:google_err');
       showOAuthError(e);
     }
   }
@@ -240,11 +269,14 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
     String? emailReauthPassword,
   }) async {
     try {
+      await AppCrashlytics.log('auth:delete_account_start');
       await _accountUseCase.deleteAccount(
         provider,
         emailReauthPassword: emailReauthPassword,
       );
+      await AppCrashlytics.log('auth:delete_account_ok');
     } catch (e) {
+      await AppCrashlytics.log('auth:delete_account_err');
       rethrow;
     }
   }

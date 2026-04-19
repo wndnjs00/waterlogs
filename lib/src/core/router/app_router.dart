@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:waterlogs/src/core/crashlytics/crashlytics_nav_observer.dart';
 import 'package:waterlogs/src/core/router/app_routes.dart';
 
 import '../../features/main/presentation/screen/main_shell_page.dart';
@@ -14,6 +15,7 @@ import '../../features/account/presentation/screen/sign_up_screen.dart';
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: AppRoutes.login,
+    observers: [CrashlyticsNavObserver()],
     routes: [
       GoRoute(
         path: AppRoutes.login,

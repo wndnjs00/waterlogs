@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:waterlogs/src/core/crashlytics/app_crashlytics.dart';
 import 'package:waterlogs/src/core/util/auth_error_mapper.dart';
 import 'package:waterlogs/src/features/account/domain/repository/time_provider.dart';
 import 'package:waterlogs/src/features/main/domain/model/beverage_type.dart';
@@ -28,6 +31,7 @@ class WaterViewModel extends StateNotifier<WaterViewState> {
     _uid = uid;
 
     try {
+      await AppCrashlytics.log('water:load_today_start');
       final unlock = await _unlockStore.load(uid);
       final date = _timeProvider.waterLogDateString();
       final serverLog = await _waterUseCase.getToday(uid, date);
@@ -69,9 +73,22 @@ class WaterViewModel extends StateNotifier<WaterViewState> {
         unlockedPremiumBeverageCount: unlock.unlockedPremiumCount,
         rewardedAdProgress: unlock.rewardedProgress,
       );
+      final derived = _withDerived(displayLog);
+      await AppCrashlytics.syncWaterSession(
+        logDate: date,
+        cups: derived.cups,
+        hasUnsavedDraft: unsaved,
+      );
+      await AppCrashlytics.log('water:load_today_ok');
       await _loadWeeklyAndMonthly(uid);
-      _syncChartsWithToday(_withDerived(displayLog));
-    } catch (e) {
+      _syncChartsWithToday(derived);
+    } catch (e, st) {
+      await AppCrashlytics.log('water:load_today_err');
+      await AppCrashlytics.recordHandledError(
+        e,
+        st,
+        reason: 'loadToday',
+      );
       state = state.copyWith(errorMessage: AuthErrorMapper.mapForWaterUpdate(e));
     }
   }
@@ -200,6 +217,18 @@ class WaterViewModel extends StateNotifier<WaterViewState> {
       errorMessage: null,
     );
     _syncChartsWithToday(newLog);
+    unawaited(
+      AppCrashlytics.syncWaterSession(
+        logDate: newLog.date,
+        cups: newLog.cups,
+        hasUnsavedDraft: true,
+      ),
+    );
+    unawaited(
+      AppCrashlytics.log(
+        'water:draft_changed totalMl=${newLog.totalMl} cups=${newLog.cups}',
+      ),
+    );
   }
 
   Future<void> saveToCloud() async {
@@ -209,6 +238,8 @@ class WaterViewModel extends StateNotifier<WaterViewState> {
     if (!state.hasUnsavedChanges) return;
 
     state = state.copyWith(isUpdating: true, errorMessage: null);
+    await AppCrashlytics.log('water:save_cloud_start');
+    await AppCrashlytics.setCustomKey('water_saving', true);
     try {
       final newBadges = await _waterUseCase.saveWithAchievement(uid, log);
       await _draftRepository.clearDraft(uid, log.date);
@@ -227,9 +258,23 @@ class WaterViewModel extends StateNotifier<WaterViewState> {
         isUpdating: false,
         hasUnsavedChanges: false,
       );
+      await AppCrashlytics.setCustomKey('water_saving', false);
+      await AppCrashlytics.syncWaterSession(
+        logDate: synced.date,
+        cups: synced.cups,
+        hasUnsavedDraft: false,
+      );
+      await AppCrashlytics.log('water:save_cloud_ok');
       await _loadWeeklyAndMonthly(uid);
       _syncChartsWithToday(synced);
-    } catch (e) {
+    } catch (e, st) {
+      await AppCrashlytics.setCustomKey('water_saving', false);
+      await AppCrashlytics.log('water:save_cloud_err');
+      await AppCrashlytics.recordHandledError(
+        e,
+        st,
+        reason: 'saveToCloud',
+      );
       state = state.copyWith(
         isUpdating: false,
         errorMessage: AuthErrorMapper.mapForWaterUpdate(e),
