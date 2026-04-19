@@ -11,6 +11,7 @@ import '../../features/notification/presentation/screen/notification_screen.dart
 import '../../features/account/presentation/screen/login_screen.dart';
 import '../../features/account/presentation/screen/sign_in_screen.dart';
 import '../../features/account/presentation/screen/sign_up_screen.dart';
+import '../../features/account/presentation/screen/privacy_terms_pdf_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -31,6 +32,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.signUp,
         name: AppRoutes.signUpName,
         builder: (context, state) => const SignUpScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.privacyTermsPdf,
+        name: AppRoutes.privacyTermsPdfName,
+        builder: (context, state) => const PrivacyTermsPdfScreen(),
       ),
       GoRoute(
         path: AppRoutes.notification,

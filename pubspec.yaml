@@ -52,6 +52,7 @@ dependencies:
   flutter_local_notifications: ^17.2.2
   google_mobile_ads: ^7.0.0
   firebase_crashlytics: ^4.3.10
+  pdfx: ^2.9.2
 
 dev_dependencies:
   flutter_test:
@@ -69,4 +70,6 @@ flutter:
 
   assets:
     - assets/
+    # `assets/` 항목은 직계 파일만 포함되므로 하위 폴더 PDF는 별도 등록 필요
+    - assets/legal/privacy_and_terms.pdf
     - .env

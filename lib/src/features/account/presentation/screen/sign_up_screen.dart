@@ -20,9 +20,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  bool _allChecked = false;
-  bool _termsChecked = false;
-  bool _privacyChecked = false;
+  bool _termsAndPrivacyChecked = false;
 
   @override
   void dispose() {
@@ -68,7 +66,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
     final isPasswordMatch = password.isNotEmpty && password == confirmPassword;
 
-    final isFormValid = isValidEmail && isValidPassword && isPasswordMatch && _termsChecked && _privacyChecked;
+    final isFormValid =
+        isValidEmail && isValidPassword && isPasswordMatch && _termsAndPrivacyChecked;
     final isLoading = state.signUpState.status == EmailAuthStatus.loading;
 
         return Scaffold(
@@ -157,70 +156,30 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   Row(
                     children: [
                       Checkbox(
-                        value: _allChecked,
+                        value: _termsAndPrivacyChecked,
                         onChanged: (checked) {
                           setState(() {
-                            _allChecked = checked ?? false;
-                            _termsChecked = _allChecked;
-                            _privacyChecked = _allChecked;
+                            _termsAndPrivacyChecked = checked ?? false;
                           });
                         },
                       ),
-                      const Text('전체 동의', style: TextStyle(fontSize: 14)),
-                    ],
-                  ),
-                  const Divider(),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: _termsChecked,
-                            onChanged: (checked) {
-                              setState(() {
-                                _termsChecked = checked ?? false;
-                                _allChecked = _termsChecked && _privacyChecked;
-                              });
-                            },
-                          ),
-                          const Text('(필수) 서비스 이용약관'),
-                          const Spacer(),
-                          GestureDetector(
-                            onTap: () {},
-                            child: const Text(
-                              '보기',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ],
+                      const Expanded(
+                        child: Text(
+                          '(필수) 개인정보 처리방침 및 이용약관',
+                          style: TextStyle(fontSize: 14),
+                        ),
                       ),
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: _privacyChecked,
-                            onChanged: (checked) {
-                              setState(() {
-                                _privacyChecked= checked ?? false;
-                                _allChecked = _termsChecked && _privacyChecked;
-                              });
-                            },
+                      GestureDetector(
+                        onTap: () {
+                          context.push(AppRoutes.privacyTermsPdf);
+                        },
+                        child: const Text(
+                          '보기',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
                           ),
-                          const Text('(필수) 개인정보 처리방침'),
-                          const Spacer(),
-                          GestureDetector(
-                            onTap: () {},
-                            child: const Text(
-                              '보기',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),

@@ -39,5 +39,11 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+    # pdfx podspec이 시뮬레이터를 x86_64로만 제한해 Apple Silicon에서 채널 오류가 날 수 있음
+    if target.name == 'pdfx'
+      target.build_configurations.each do |config|
+        config.build_settings.delete('VALID_ARCHS')
+      end
+    end
   end
 end
