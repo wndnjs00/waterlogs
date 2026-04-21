@@ -7,7 +7,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+            android:value="ca-app-pub-7669488321210566~4112585144" />
 
         <!-- Kakao Login Redirect Activity -->
         <activity
