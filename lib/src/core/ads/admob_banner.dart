@@ -70,6 +70,9 @@ class _AdmobBannerState extends State<AdmobBanner> {
   }
 
   String? _bannerUnitId() {
+    if (kDebugMode) {
+      return Platform.isAndroid ? _testBannerAndroid : _testBannerIos;
+    }
     // 앱에서 실 유닛 ID를 .env로 주입해두면 그걸 우선 사용
     if (Platform.isAndroid) {
       return AppConfig.admobBannerAndroid ?? _testBannerAndroid;

@@ -19,7 +19,7 @@ if (localPropertiesFile.exists()) {
 val kakaoKey = localProperties.getProperty("KAKAO_NATIVE_APP_KEY")
 
 android {
-    namespace = "com.example.waterlogs"
+    namespace = "com.juwon.waterlog"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -35,7 +35,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.waterlogs"
+        applicationId = "com.juwon.waterlog"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

@@ -12,6 +12,9 @@ class AdmobRewarded {
   static const _testRewardedIos = 'ca-app-pub-3940256099942544/1712485313';
 
   static String? _rewardedUnitId() {
+    if (kDebugMode) {
+      return Platform.isAndroid ? _testRewardedAndroid : _testRewardedIos;
+    }
     // 추후 실 유닛을 .env로 주입하면 우선 사용
     final fromEnv = Platform.isAndroid
         ? AppConfig.admobRewardedAndroid
