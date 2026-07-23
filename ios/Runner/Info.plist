@@ -27,6 +27,9 @@
 		<!-- Google Sign-In: iOS 클라이언트 ID (GoogleService-Info.plist CLIENT_ID와 동일) -->
 		<key>GIDClientID</key>
 		<string>697222347127-rnaesrn8e0f63asicl0nsj9ln4mmbo3g.apps.googleusercontent.com</string>
+		<!-- OAuth(카카오 등) 콜백 URL이 go_router로 넘어가며 라우트 오류 나는 것 방지 -->
+		<key>FlutterDeepLinkingEnabled</key>
+		<false/>
 		<key>CFBundleURLTypes</key>
 		<array>
 			<!-- Naver Login -->
