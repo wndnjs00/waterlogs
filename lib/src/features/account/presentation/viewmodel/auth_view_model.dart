@@ -236,9 +236,11 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
       state = state.copyWith(user: user);
       await _setupFcm();
       await AppCrashlytics.log('auth:naver_ok');
-    } catch (e) {
+    } catch (e, st) {
       await AppCrashlytics.log('auth:naver_err');
-      showOAuthError(e);
+      await AppCrashlytics.recordHandledError(e, st, reason: 'naver_login');
+      // TODO: 원인 확인 후 원래 showOAuthError(e)로 되돌리기
+      state = state.copyWith(toastMessage: e.toString());
     }
   }
 

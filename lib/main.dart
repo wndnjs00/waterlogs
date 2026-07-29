@@ -61,7 +61,7 @@ Future<void> main() async {
       nativeAppKey: AppConfig.kakaoNativeAppKey,
     );
 
-    NaverLoginSDK.initialize(
+    await NaverLoginSDK.initialize(
       urlScheme: AppConfig.naverUrlScheme,
       clientId: AppConfig.naverClientId,
       clientSecret: AppConfig.naverClientSecret,

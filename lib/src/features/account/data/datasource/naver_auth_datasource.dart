@@ -3,19 +3,27 @@ import 'package:naver_login_sdk/naver_login_sdk.dart';
 class NaverAuthDataSource {
 
   Future<String> getAccessToken() async {
+    String? failCode;
+    String? failMessage;
 
-    final result = await NaverLoginSDK.login();
+    final result = await NaverLoginSDK.login(
+      callback: OAuthLoginCallback(
+        onSuccess: () {},
+        onFailure: (httpStatus, message) {
+          failCode = httpStatus;
+          failMessage = message;
+        },
+      ),
+    );
 
     if (result != true) {
-      throw StateError('Naver login cancelled');
+      throw StateError('Naver fail: code=$failCode msg=$failMessage');
     }
 
     final token = await NaverLoginSDK.getAccessToken();
-
     if (token.isEmpty) {
       throw StateError('Naver token empty');
     }
-
     return token;
   }
 
