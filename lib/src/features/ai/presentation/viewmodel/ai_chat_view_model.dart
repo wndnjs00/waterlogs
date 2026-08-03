@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:waterlogs/src/core/util/auth_error_mapper.dart';
@@ -52,7 +54,14 @@ class AiChatViewModel extends StateNotifier<AiChatState> {
       await _localChat.appendMessage(botMsg);
       await _chatLimitStore.increase(_todayString());
       state = state.copyWith(count: await _chatLimitStore.getCount());
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('AI error: $e');
+      debugPrint('AI stack: $st');
+      if (e is DioException) {
+        debugPrint(
+          'type=${e.type} status=${e.response?.statusCode} data=${e.response?.data}',
+        );
+      }
       state = state.copyWith(toastMessage: AuthErrorMapper.map(e));
     } finally {
       state = state.copyWith(isLoading: false);

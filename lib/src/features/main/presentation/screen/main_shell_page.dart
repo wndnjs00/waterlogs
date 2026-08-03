@@ -128,20 +128,22 @@ class MainShellPage extends ConsumerWidget {
         ],
       ),
       body: child,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _mainShellSelectedIndex(context),
-        onDestinationSelected: (index) => _onMainShellTabTapped(context, index),
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.water_drop_outlined),
-            label: '물마시기',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.chat_bubble_outline),
-            label: 'Ai 도우미',
-          ),
-        ],
-      ),
+      // 탭들 임시 비활성화
+      bottomNavigationBar: null,
+      // bottomNavigationBar: NavigationBar(
+      //   selectedIndex: _mainShellSelectedIndex(context),
+      //   onDestinationSelected: (index) => _onMainShellTabTapped(context, index),
+      //   destinations: const [
+      //     NavigationDestination(
+      //       icon: Icon(Icons.water_drop_outlined),
+      //       label: '물마시기',
+      //     ),
+      //     NavigationDestination(
+      //       icon: Icon(Icons.chat_bubble_outline),
+      //       label: 'Ai 도우미',
+      //     ),
+      //   ],
+      // ),
     );
   }
 }
