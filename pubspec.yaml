@@ -2,7 +2,7 @@ name: waterlogs
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.4+5  # 2026.07.23
+version: 1.0.5+6  # 2026.08.03
 
 environment:
   sdk: ^3.9.2
