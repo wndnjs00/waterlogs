@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -51,13 +42,32 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAhRsJN2FL2dyzq20Brjv_fsY2Xo153AgA',
-    appId: '1:697222347127:android:6a108be1ba807d67878972',
+    appId: '1:697222347127:android:45c190b3dbcbbbe5878972',
     messagingSenderId: '697222347127',
     projectId: 'waterlog-f7fc7',
     storageBucket: 'waterlog-f7fc7.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDpcMMh3oW2bzKdGUy61DA95Xy_xwcF-Xk',
+    appId: '1:697222347127:ios:39bd485c90b4d98d878972',
+    messagingSenderId: '697222347127',
+    projectId: 'waterlog-f7fc7',
+    storageBucket: 'waterlog-f7fc7.firebasestorage.app',
+    androidClientId: '697222347127-52bt7rt018b1flnb2cef95ld0jum10tp.apps.googleusercontent.com',
+    iosClientId: '697222347127-fpoehvt33cior0koj11li82420c6vo94.apps.googleusercontent.com',
+    iosBundleId: 'com.juwon.waterlog',
+  );
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCHFSmWW78Tw1qgmMnAczOoYw2yvDEEh_s',
+    appId: '1:697222347127:web:058110a781d1b7ce878972',
+    messagingSenderId: '697222347127',
+    projectId: 'waterlog-f7fc7',
+    authDomain: 'waterlog-f7fc7.firebaseapp.com',
+    storageBucket: 'waterlog-f7fc7.firebasestorage.app',
+    measurementId: 'G-M5H5MPV07E',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyDpcMMh3oW2bzKdGUy61DA95Xy_xwcF-Xk',
     appId: '1:697222347127:ios:0ddc1fabee4c8b71878972',
     messagingSenderId: '697222347127',
@@ -68,4 +78,13 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.waterlogs',
   );
 
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyCHFSmWW78Tw1qgmMnAczOoYw2yvDEEh_s',
+    appId: '1:697222347127:web:f4be238001451c66878972',
+    messagingSenderId: '697222347127',
+    projectId: 'waterlog-f7fc7',
+    authDomain: 'waterlog-f7fc7.firebaseapp.com',
+    storageBucket: 'waterlog-f7fc7.firebasestorage.app',
+    measurementId: 'G-SHZ3F1V5HC',
+  );
 }

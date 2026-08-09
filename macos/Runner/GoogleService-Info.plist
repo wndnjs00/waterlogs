@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>697222347127-fpoehvt33cior0koj11li82420c6vo94.apps.googleusercontent.com</string>
+	<string>697222347127-rnaesrn8e0f63asicl0nsj9ln4mmbo3g.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.697222347127-fpoehvt33cior0koj11li82420c6vo94</string>
+	<string>com.googleusercontent.apps.697222347127-rnaesrn8e0f63asicl0nsj9ln4mmbo3g</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>697222347127-52bt7rt018b1flnb2cef95ld0jum10tp.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.juwon.waterlog</string>
+	<string>com.example.waterlogs</string>
 	<key>PROJECT_ID</key>
 	<string>waterlog-f7fc7</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:697222347127:ios:39bd485c90b4d98d878972</string>
+	<string>1:697222347127:ios:0ddc1fabee4c8b71878972</string>
 </dict>
 </plist>
