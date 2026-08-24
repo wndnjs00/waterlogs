@@ -73,12 +73,18 @@ class MainShellPage extends ConsumerWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: GestureDetector(
-              onTap: () => context.push(AppRoutes.badge),
-              child: const Image(
-                image: AssetImage(AssetPath.badgeIcon),
-                width: 24,
-                height: 24,
+            // tooltip/Semantics → Android content-desc (Appium ACCESSIBILITY_ID)
+            child: Semantics(
+              label: '뱃지',
+              button: true,
+              child: GestureDetector(
+                onTap: () => context.push(AppRoutes.badge),
+                child: const Image(
+                  image: AssetImage(AssetPath.badgeIcon),
+                  width: 24,
+                  height: 24,
+                  excludeFromSemantics: true,
+                ),
               ),
             ),
           ),
@@ -94,35 +100,35 @@ class MainShellPage extends ConsumerWidget {
               ),
               backgroundColor: Colors.red,
               child: IconButton(
+                tooltip: '알림',
                 icon: const Icon(Icons.notifications, size: 28),
                 onPressed: () => context.push(AppRoutes.notification),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: GestureDetector(
-              onTap: () => _onLogoutTap(context, ref, loginProvider),
-              child: const Image(
-                image: AssetImage(AssetPath.logoutIcon),
-                width: 24,
-                height: 24,
-              ),
+          // tooltip → Android content-desc (Appium ACCESSIBILITY_ID)
+          IconButton(
+            tooltip: '로그아웃',
+            onPressed: () => _onLogoutTap(context, ref, loginProvider),
+            icon: const Image(
+              image: AssetImage(AssetPath.logoutIcon),
+              width: 24,
+              height: 24,
+              excludeFromSemantics: true,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: GestureDetector(
-              onTap: () => signOutDialog(
-                context: context,
-                ref: ref,
-                loginProvider: loginProvider,
-              ),
-              child: const Image(
-                image: AssetImage(AssetPath.signoutIcon),
-                width: 20,
-                height: 20,
-              ),
+          IconButton(
+            tooltip: '회원탈퇴',
+            onPressed: () => signOutDialog(
+              context: context,
+              ref: ref,
+              loginProvider: loginProvider,
+            ),
+            icon: const Image(
+              image: AssetImage(AssetPath.signoutIcon),
+              width: 20,
+              height: 20,
+              excludeFromSemantics: true,
             ),
           ),
         ],
