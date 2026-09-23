@@ -6,14 +6,12 @@ import 'package:waterlogs/src/features/main/domain/model/beverage_type.dart';
 
 class CircularWaterProgress extends StatelessWidget {
   final Map<String, int> beverages;
-  final int waterCups;
   final int target;
   final int streak;
 
   const CircularWaterProgress({
     super.key,
     required this.beverages,
-    required this.waterCups,
     required this.target,
     required this.streak,
   });
@@ -24,8 +22,16 @@ class CircularWaterProgress extends StatelessWidget {
 
   int _cupsOf(BeverageType type) => (beverages[type.id] ?? 0) ~/ 250;
 
+  int get _waterCups => _cupsOf(BeverageType.water);
+
   int get _totalCups =>
       BeverageType.values.fold(0, (sum, type) => sum + _cupsOf(type));
+
+  /// 물·커피 등 모든 음료 합산이 목표 잔 수에 도달하면 1.
+  double _fillRatio(double revealedCups) {
+    if (target <= 0) return 0;
+    return (revealedCups / target).clamp(0.0, 1.0);
+  }
 
   List<_RingSegment> get _segments => [
     for (final type in BeverageType.values)
@@ -36,6 +42,7 @@ class CircularWaterProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final totalCups = _totalCups;
+    final waterCups = _waterCups;
     final segments = _segments;
 
     return TweenAnimationBuilder<double>(
@@ -83,42 +90,56 @@ class CircularWaterProgress extends StatelessWidget {
                     SizedBox(
                       width: _innerSize,
                       height: _innerSize,
-                      child: DecoratedBox(
-                        decoration: const BoxDecoration(
-                          color: AppColors.circularProgressCircleBlue,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                '$totalCups',
-                                style: const TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.mainBlue,
+                      child: ClipOval(
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            Container(
+                              width: _innerSize,
+                              height: _innerSize,
+                              color: AppColors.circularProgressCircleBlue,
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: SizedBox(
+                                height: _innerSize * _fillRatio(revealedCups),
+                                width: _innerSize,
+                                child: ColoredBox(
+                                  color: AppColors.mainBlue.withValues(alpha: 0.4),
                                 ),
                               ),
-                              Text(
-                                '/ $target 잔',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
+                            ),
+                            Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    '$totalCups',
+                                    style: const TextStyle(
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.mainBlue,
+                                    ),
+                                  ),
+                                  Text(
+                                    '/ $target 잔',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              if (segments.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                _BeverageCountLegend(beverages: beverages),
-              ],
+              const SizedBox(height: 16),
+              _BeverageCountLegend(beverages: beverages),
               const SizedBox(height: 20),
               Text(
                 waterCups >= target
@@ -148,6 +169,10 @@ class _BeverageCountLegend extends StatelessWidget {
 
   const _BeverageCountLegend({required this.beverages});
 
+  bool get _hasAny => BeverageType.values.any(
+        (type) => (beverages[type.id] ?? 0) ~/ 250 > 0,
+      );
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -157,6 +182,11 @@ class _BeverageCountLegend extends StatelessWidget {
         runSpacing: 8,
         alignment: WrapAlignment.center,
         children: [
+          if (!_hasAny)
+            const Opacity(
+              opacity: 0,
+              child: Text('물 0', style: TextStyle(fontSize: 13)),
+            ),
           for (final type in BeverageType.values)
             if ((beverages[type.id] ?? 0) ~/ 250 > 0)
               Row(
