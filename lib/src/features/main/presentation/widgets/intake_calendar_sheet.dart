@@ -24,7 +24,8 @@ class IntakeCalendarSheet extends ConsumerStatefulWidget {
   }
 
   @override
-  ConsumerState<IntakeCalendarSheet> createState() => _IntakeCalendarSheetState();
+  ConsumerState<IntakeCalendarSheet> createState() =>
+      _IntakeCalendarSheetState();
 }
 
 class _IntakeCalendarSheetState extends ConsumerState<IntakeCalendarSheet> {
@@ -39,7 +40,9 @@ class _IntakeCalendarSheetState extends ConsumerState<IntakeCalendarSheet> {
     final now = DateTime.now();
     _visibleMonth = DateTime(now.year, now.month);
     _selectedDay = DateTime(now.year, now.month, now.day);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _loadMonth(_visibleMonth));
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _loadMonth(_visibleMonth),
+    );
   }
 
   Future<void> _loadMonth(DateTime month) async {
@@ -58,7 +61,8 @@ class _IntakeCalendarSheetState extends ConsumerState<IntakeCalendarSheet> {
   List<WaterLog> _mergeToday(List<WaterLog> server, WaterLog? todayLog) {
     if (todayLog == null) return server;
     final rest = server.where((l) => l.date != todayLog.date).toList();
-    final merged = [...rest, todayLog]..sort((a, b) => a.date.compareTo(b.date));
+    final merged = [...rest, todayLog]
+      ..sort((a, b) => a.date.compareTo(b.date));
     return merged;
   }
 
@@ -93,7 +97,8 @@ class _IntakeCalendarSheetState extends ConsumerState<IntakeCalendarSheet> {
 
   String _titleMonth(DateTime m) => '${m.year}년 ${m.month}월';
 
-  String _titleDetailDay(DateTime d) => '${d.year}년 ${d.month}월 ${d.day}일 섭취 기록';
+  String _titleDetailDay(DateTime d) =>
+      '${d.year}년 ${d.month}월 ${d.day}일 섭취 기록';
 
   WaterLog? _logFor(DateTime day) => _byDate[_iso(day)];
 
@@ -108,12 +113,12 @@ class _IntakeCalendarSheetState extends ConsumerState<IntakeCalendarSheet> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<WaterLog?>(
-      waterViewModelProvider.select((s) => s.todayLog),
-      (prev, next) {
-        if (prev != next) _loadMonth(_visibleMonth);
-      },
-    );
+    ref.listen<WaterLog?>(waterViewModelProvider.select((s) => s.todayLog), (
+      prev,
+      next,
+    ) {
+      if (prev != next) _loadMonth(_visibleMonth);
+    });
 
     final today = DateTime.now();
     final todayNorm = DateTime(today.year, today.month, today.day);
@@ -240,83 +245,169 @@ class _MonthGrid extends StatelessWidget {
   final Set<BeverageType> Function(WaterLog? log) typesWithIntake;
   final void Function(DateTime day) onSelectDay;
 
+  static const _crossSpacing = 2.0;
+  static const _padV = 3.0;
+  static const _dateGap = 2.0;
+  static const _dateFontSize = 14.0;
+  static const _dateBoxHeight = 18.0;
+
   int _leadingBlanks(DateTime firstOfMonth) => firstOfMonth.weekday % 7;
+
+  double _cellExtent(double gridWidth) {
+    final cellWidth = (gridWidth - _crossSpacing * 6) / 7;
+    final iconSize = _DayBeverageIcons.iconSizeFor(cellWidth);
+    return _padV * 2 +
+        _dateBoxHeight +
+        _dateGap +
+        _DayBeverageIcons.blockHeight(iconSize);
+  }
 
   @override
   Widget build(BuildContext context) {
     final first = DateTime(visibleMonth.year, visibleMonth.month, 1);
-    final daysInMonth = DateTime(visibleMonth.year, visibleMonth.month + 1, 0).day;
+    final daysInMonth = DateTime(
+      visibleMonth.year,
+      visibleMonth.month + 1,
+      0,
+    ).day;
     final leading = _leadingBlanks(first);
     final totalCells = ((leading + daysInMonth + 6) ~/ 7) * 7;
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 7,
-        mainAxisSpacing: 6,
-        crossAxisSpacing: 4,
-        childAspectRatio: 0.72,
-      ),
-      itemCount: totalCells,
-      itemBuilder: (context, index) {
-        final dayNum = index - leading + 1;
-        if (dayNum < 1 || dayNum > daysInMonth) {
-          return const SizedBox.shrink();
-        }
-        final day = DateTime(visibleMonth.year, visibleMonth.month, dayNum);
-        final log = logFor(day);
-        final types = typesWithIntake(log);
-        final hasData = types.isNotEmpty;
-        final isSelected =
-            day.year == selectedDay.year &&
-            day.month == selectedDay.month &&
-            day.day == selectedDay.day;
-        final isToday =
-            day.year == today.year && day.month == today.month && day.day == today.day;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 7,
+            mainAxisSpacing: 6,
+            crossAxisSpacing: _crossSpacing,
+            mainAxisExtent: _cellExtent(constraints.maxWidth),
+          ),
+          itemCount: totalCells,
+          itemBuilder: (context, index) {
+            final dayNum = index - leading + 1;
+            if (dayNum < 1 || dayNum > daysInMonth) {
+              return const SizedBox.shrink();
+            }
+            final day = DateTime(visibleMonth.year, visibleMonth.month, dayNum);
+            final log = logFor(day);
+            final types = typesWithIntake(log);
+            final hasData = types.isNotEmpty;
+            final isSelected =
+                day.year == selectedDay.year &&
+                day.month == selectedDay.month &&
+                day.day == selectedDay.day;
+            final isToday =
+                day.year == today.year &&
+                day.month == today.month &&
+                day.day == today.day;
 
-        return GestureDetector(
-          onTap: () => onSelectDay(day),
-          behavior: HitTestBehavior.opaque,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? AppColors.mainBlue.withValues(alpha: 0.22)
-                  : hasData
-                  ? AppColors.mainBlue.withValues(alpha: 0.08)
-                  : null,
-              borderRadius: BorderRadius.circular(10),
-              border: isToday
-                  ? Border.all(color: AppColors.mainBlue, width: 2)
-                  : null,
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-            child: Column(
+            return GestureDetector(
+              onTap: () => onSelectDay(day),
+              behavior: HitTestBehavior.opaque,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? AppColors.mainBlue.withValues(alpha: 0.22)
+                      : hasData
+                      ? AppColors.mainBlue.withValues(alpha: 0.08)
+                      : null,
+                  borderRadius: BorderRadius.circular(10),
+                  border: isToday
+                      ? Border.all(color: AppColors.mainBlue, width: 2)
+                      : null,
+                ),
+                padding: const EdgeInsets.symmetric(vertical: _padV),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: _dateBoxHeight,
+                      child: Center(
+                        child: Text(
+                          '$dayNum',
+                          style: TextStyle(
+                            fontSize: _dateFontSize,
+                            height: 1,
+                            fontWeight: isSelected || isToday
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                            color: Colors.grey.shade800,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: _dateGap),
+                    _DayBeverageIcons(types: types),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _DayBeverageIcons extends StatelessWidget {
+  const _DayBeverageIcons({required this.types});
+
+  final Set<BeverageType> types;
+
+  static const double _spacing = 1;
+  static const int _columns = 2;
+  static const int _rows = 2;
+  static const int _maxVisible = 4;
+
+  static double iconSizeFor(double cellWidth) {
+    if (cellWidth <= 0) return 0;
+    return (cellWidth - _spacing * (_columns - 1)) / _columns;
+  }
+
+  static double blockHeight(double iconSize) {
+    return _rows * iconSize + _spacing * (_rows - 1);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final icons = [
+      for (final type in BeverageType.values)
+        if (types.contains(type)) type,
+    ].take(_maxVisible).toList();
+    if (icons.isEmpty) return const SizedBox.shrink();
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final size = iconSizeFor(constraints.maxWidth);
+        if (size < 1) return const SizedBox.shrink();
+        const cols = _columns;
+
+        final rows = <Widget>[];
+        for (var i = 0; i < icons.length; i += cols) {
+          final slice = icons.skip(i).take(cols).toList();
+          rows.add(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  '$dayNum',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: isSelected || isToday ? FontWeight.w700 : FontWeight.w500,
-                    color: Colors.grey.shade800,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Expanded(
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 2,
-                    runSpacing: 2,
-                    children: [
-                      for (final t in BeverageType.values)
-                        if (types.contains(t)) _BeverageMiniIcon(type: t),
-                    ],
-                  ),
-                ),
+                for (var j = 0; j < slice.length; j++) ...[
+                  if (j > 0) const SizedBox(width: _spacing),
+                  _BeverageMiniIcon(type: slice[j], size: size),
+                ],
               ],
             ),
-          ),
+          );
+        }
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            for (var i = 0; i < rows.length; i++) ...[
+              if (i > 0) const SizedBox(height: _spacing),
+              rows[i],
+            ],
+          ],
         );
       },
     );
@@ -324,21 +415,22 @@ class _MonthGrid extends StatelessWidget {
 }
 
 class _BeverageMiniIcon extends StatelessWidget {
-  const _BeverageMiniIcon({required this.type});
+  const _BeverageMiniIcon({required this.type, required this.size});
 
   final BeverageType type;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 18,
-      height: 18,
+      width: size,
+      height: size,
       child: Image.asset(
         type.assetPath,
         fit: BoxFit.contain,
         errorBuilder: (_, __, ___) => Icon(
           type.icon,
-          size: 16,
+          size: size,
           color: type == BeverageType.water ? AppColors.mainBlue : type.color,
         ),
       ),
@@ -397,13 +489,14 @@ class _DayDetailCard extends StatelessWidget {
                     child: Row(
                       children: [
                         SizedBox(
-                          width: 28,
-                          height: 28,
+                          width: 40,
+                          height: 40,
                           child: Image.asset(
                             entries[i].type.assetPath,
                             fit: BoxFit.contain,
                             errorBuilder: (_, __, ___) => Icon(
                               entries[i].type.icon,
+                              size: 40,
                               color: entries[i].type.color,
                             ),
                           ),
