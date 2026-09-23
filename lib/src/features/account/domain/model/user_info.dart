@@ -27,5 +27,6 @@ enum LoginProvider {
   google,
   kakao,
   naver,
+  apple,
   email,
 }

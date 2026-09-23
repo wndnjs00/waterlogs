@@ -40,4 +40,8 @@ class AuthUseCase {
   Future<UserInfo> signInWithGoogle() {
     return repository.signInWithGoogle();
   }
+
+  Future<UserInfo> signInWithApple() {
+    return repository.signInWithApple();
+  }
 }

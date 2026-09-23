@@ -10,6 +10,7 @@ class AssetPath {
   static const naverLoginIcon = "assets/ic_naver_logo.png";
   static const kakaoLoginIcon = "assets/kakao_login_large_wide.png";
   static const googleLoginIcon = "assets/ic_google_logo.png";
+  static const appleLoginIcon = "assets/ic_apple_login_logo.png";
 
   // ai_witi
   static const aiWitiIcon = "assets/ai_helper_img.png";

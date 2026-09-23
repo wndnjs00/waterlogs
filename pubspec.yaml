@@ -25,6 +25,8 @@ dependencies:
   kakao_flutter_sdk_user: ^1.10.0
   naver_login_sdk: ^3.2.0
   google_sign_in: ^6.2.2
+  sign_in_with_apple: ^6.1.4
+  crypto: ^3.0.6
 
   # State management
   flutter_riverpod: ^2.6.1

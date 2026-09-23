@@ -1,0 +1,186 @@
+{
+  "project_info": {
+    "project_number": "697222347127",
+    "project_id": "waterlog-f7fc7",
+    "storage_bucket": "waterlog-f7fc7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:697222347127:android:e3b76e1486ff7a72878972",
+        "android_client_info": {
+          "package_name": "com.app.waterlog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "697222347127-52bt7rt018b1flnb2cef95ld0jum10tp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.waterlog",
+            "certificate_hash": "e8fd22e9d9483d66bb4b2af04247bfd730735399"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhRsJN2FL2dyzq20Brjv_fsY2Xo153AgA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "697222347127-0c746cppqlmkvdhhu8c4kpfjbu05bsen.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "697222347127-b3pg1nar30gfiqqgjie4hm8t3216dc95.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.waterlogs.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:697222347127:android:6a108be1ba807d67878972",
+        "android_client_info": {
+          "package_name": "com.example.waterlogs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "697222347127-72vcamlngmarrdt3q7vlnj9t003uq0o6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.waterlogs",
+            "certificate_hash": "f3cf9e8616cd0b34bc79dce18d5153dd33e0165a"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhRsJN2FL2dyzq20Brjv_fsY2Xo153AgA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "697222347127-0c746cppqlmkvdhhu8c4kpfjbu05bsen.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "697222347127-b3pg1nar30gfiqqgjie4hm8t3216dc95.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.waterlogs.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:697222347127:android:45c190b3dbcbbbe5878972",
+        "android_client_info": {
+          "package_name": "com.juwon.waterlog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "697222347127-m6cgj7p0ekf48ciof0id154je4pncam3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.juwon.waterlog",
+            "certificate_hash": "9c03814bbb18e91702152483af9f41f873d9673a"
+          }
+        },
+        {
+          "client_id": "697222347127-qqanr3gojkdcoarglnscpbon1dke7v5a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.juwon.waterlog",
+            "certificate_hash": "f3cf9e8616cd0b34bc79dce18d5153dd33e0165a"
+          }
+        },
+        {
+          "client_id": "697222347127-qupv4cbgap07r3b99gs1icrt95b8g3bm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.juwon.waterlog",
+            "certificate_hash": "facb0a0a8b3bc4d5a22d43b60afc4290df669055"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhRsJN2FL2dyzq20Brjv_fsY2Xo153AgA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "697222347127-0c746cppqlmkvdhhu8c4kpfjbu05bsen.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "697222347127-b3pg1nar30gfiqqgjie4hm8t3216dc95.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.waterlogs.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:697222347127:android:57ee09102e2f0694878972",
+        "android_client_info": {
+          "package_name": "com.waterlogs.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "697222347127-dhob46defl1pj1ucvmmpmpia4i809tpr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.waterlogs.app",
+            "certificate_hash": "f3cf9e8616cd0b34bc79dce18d5153dd33e0165a"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhRsJN2FL2dyzq20Brjv_fsY2Xo153AgA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "697222347127-0c746cppqlmkvdhhu8c4kpfjbu05bsen.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "697222347127-b3pg1nar30gfiqqgjie4hm8t3216dc95.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.waterlogs.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -40,5 +40,6 @@ const _$LoginProviderEnumMap = {
   LoginProvider.google: 'google',
   LoginProvider.kakao: 'kakao',
   LoginProvider.naver: 'naver',
+  LoginProvider.apple: 'apple',
   LoginProvider.email: 'email',
 };

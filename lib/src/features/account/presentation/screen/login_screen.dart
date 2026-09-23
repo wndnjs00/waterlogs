@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +9,9 @@ import 'package:waterlogs/src/features/account/presentation/viewmodel/state/auth
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/util/asset_path.dart';
+
+/// Medium 2x SIWA 로고(88px @2x = 44pt)에 맞춘 Apple 전용 높이
+const _appleLoginButtonHeight = 44.0;
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -92,6 +97,16 @@ class LoginScreen extends ConsumerWidget {
                   () => ref.read(authViewModelProvider.notifier).signInWithGoogle(),
                 ),
               ),
+              if (Platform.isIOS) ...[
+                const SizedBox(height: 8),
+                _AppleLoginButton(
+                  onTap: () => _handleSocialLogin(
+                    context,
+                    ref,
+                    () => ref.read(authViewModelProvider.notifier).signInWithApple(),
+                  ),
+                ),
+              ],
               const SizedBox(height: 8),
 
               _EmailSignUpButton(
@@ -258,6 +273,71 @@ class _GoogleLoginButton extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AppleLoginButton extends StatelessWidget {
+  const _AppleLoginButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final buttonWidth = MediaQuery.of(context).size.width * 0.65;
+    // HIG: 제목과 버튼 오른쪽 가장자리 사이 최소 8%
+    final titleRightMargin = buttonWidth * 0.08;
+    const logoLeftInset = 3.0;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: SizedBox(
+        width: buttonWidth,
+        height: _appleLoginButtonHeight,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6),
+            color: AppColors.appleBlack,
+          ),
+          child: Stack(
+            clipBehavior: Clip.hardEdge,
+            alignment: Alignment.center,
+            children: [
+              // HIG: 로고 전용 아트워크에는 추가 가로 패딩을 넣지 않음 (에셋에 포함됨)
+              Positioned(
+                left: logoLeftInset,
+                top: 0,
+                bottom: 0,
+                child: Image.asset(
+                  AssetPath.appleLoginIcon,
+                  height: _appleLoginButtonHeight,
+                  fit: BoxFit.contain,
+                  alignment: Alignment.centerLeft,
+                  errorBuilder: (_, __, ___) => const SizedBox(
+                    width: _appleLoginButtonHeight,
+                    height: _appleLoginButtonHeight,
+                  ),
+                ),
+              ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 16,
+                right: titleRightMargin,
+              ),
+              child: const Text(
+                'Apple로 로그인',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            ],
+          ),
         ),
       ),
     );

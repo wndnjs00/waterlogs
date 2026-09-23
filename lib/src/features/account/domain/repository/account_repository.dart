@@ -26,6 +26,8 @@ abstract class AccountRepository {
 
   Future<UserInfo> signInWithGoogle();
 
+  Future<UserInfo> signInWithApple();
+
   // 자동 로그인용: 저장된 사용자 정보 로드
   Future<UserInfo?> loadUserFromFireStore();
 

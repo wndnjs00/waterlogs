@@ -7,6 +7,7 @@ import 'package:waterlogs/src/features/account/domain/usecase/account_usecase.da
 import 'package:waterlogs/src/features/account/domain/usecase/auth_usecase.dart';
 
 import '../../data/datasource/account_remote_datasource.dart';
+import '../../data/datasource/apple_auth_datasource.dart';
 import '../../data/datasource/google_auth_datasource.dart';
 import '../../data/datasource/kakao_auth_datasource.dart';
 import '../../data/datasource/naver_auth_datasource.dart';
@@ -46,6 +47,10 @@ final googleAuthDataSourceProvider = Provider<GoogleAuthDataSource>((ref) {
   return GoogleAuthDataSource(serverClientId: AppConfig.googleServerClientId);
 });
 
+final appleAuthDataSourceProvider = Provider<AppleAuthDataSource>(
+  (ref) => AppleAuthDataSource(),
+);
+
 // Remote datasource
 final accountRemoteDataSourceProvider = Provider<AccountRemoteDataSource>((ref,) {
   final auth = ref.watch(firebaseAuthProvider);
@@ -63,6 +68,7 @@ final accountRepositoryProvider = Provider<AccountRepository>((ref) {
   final kakaoAuth = ref.watch(kakaoAuthDataSourceProvider);
   final naverAuth = ref.watch(naverAuthDataSourceProvider);
   final googleAuth = ref.watch(googleAuthDataSourceProvider);
+  final appleAuth = ref.watch(appleAuthDataSourceProvider);
   return AccountRepositoryImpl(
     auth,
     firestore,
@@ -72,6 +78,7 @@ final accountRepositoryProvider = Provider<AccountRepository>((ref) {
     kakaoAuth,
     naverAuth,
     googleAuth,
+    appleAuth,
   );
 });
 

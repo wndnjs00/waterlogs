@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:waterlogs/src/core/crashlytics/app_crashlytics.dart';
 import 'package:waterlogs/src/core/util/auth_error_mapper.dart';
 import 'package:waterlogs/src/features/account/domain/usecase/account_usecase.dart';
@@ -254,6 +255,26 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
       await AppCrashlytics.log('auth:google_ok');
     } catch (e) {
       await AppCrashlytics.log('auth:google_err');
+      showOAuthError(e);
+    }
+  }
+
+  // Apple 로그인 (iOS 전용)
+  Future<void> signInWithApple() async {
+    try {
+      await AppCrashlytics.log('auth:apple_start');
+      final user = await _authUseCase.signInWithApple();
+      state = state.copyWith(user: user);
+      await _setupFcm();
+      await AppCrashlytics.log('auth:apple_ok');
+    } on SignInWithAppleAuthorizationException catch (e) {
+      if (e.code == AuthorizationErrorCode.canceled) {
+        return;
+      }
+      await AppCrashlytics.log('auth:apple_err');
+      showOAuthError(e);
+    } catch (e) {
+      await AppCrashlytics.log('auth:apple_err');
       showOAuthError(e);
     }
   }
