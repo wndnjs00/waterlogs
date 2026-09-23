@@ -55,7 +55,8 @@ class _MainNavigationContentState extends State<MainNavigationContent> {
         children: [
           const SizedBox(height: 32),
           CircularWaterProgress(
-            cups: widget.log.cups,
+            beverages: widget.log.beverages,
+            waterCups: widget.log.cups,
             target: widget.log.targetCups,
             streak: widget.streakDays,
           ),
