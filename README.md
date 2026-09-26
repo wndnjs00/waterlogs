@@ -1,10 +1,12 @@
 # 💧 WaterLog
 하루 물 섭취량을 기록하고, 나의 수분 섭취 패턴을 확인하기 위한 목적으로 개발했습니다.<br/>
 물 마시는 습관을 기르고, 주간 / 월간 통계를 통해 건강한 수분 섭취 습관을 만들 수 있도록 제작했습니다.
-## PlayStore 다운로드 링크 ⬇️
+## 다운로드 링크 ⬇️
 [PalyStore 바로가기](https://play.google.com/store/apps/details?id=com.juwon.waterlog)
+<br>
+[AppStore 바로가기](https://apps.apple.com/app/waterlog/id6799014765)
 ## 개발 기간
-2026.03.10 ~ 진행중
+2026.03.10 ~ 계속 개선 진행중
 <br/><br/>
 ## ⚒️기술스택
 |분류|
@@ -21,7 +23,7 @@
 <br/><br/>
 ## 💻 주요기능
 ## 회원가입/로그인
-- Kakao, Naver, Google 소셜 로그인 기능을 제공합니다
+- Kakao, Naver, Google, Apple 소셜 로그인 기능을 제공합니다
 - 이메일/비밀번호 회원가입,로그인
 <p align="left">
   <img src="https://github.com/user-attachments/assets/6096be0a-bf02-442f-9e23-06830aa554de" width="180" height="400" />
